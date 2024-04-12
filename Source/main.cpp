@@ -70,6 +70,26 @@ class Astronauta{
 
 };
 
+char* FormatCPF(string cpf){
+	unsigned int stam = cpf.length(); // Para pegar o tamanho da string cpf
+	unsigned int j = 0; // Para controlar o índice de cpf_f
+	char* cpf_f = new char[15];
+
+	for(int i=0;i<stam;i++){
+		if((i+1)%3 == 0 && i <= 6){
+			cpf_f[j++] = cpf[i];
+			cpf_f[j++] = '.';
+		} else if(i > 6 && (i+1)%3 == 0){
+			cpf_f[j++] = cpf[i];
+			cpf_f[j++] = '-';
+		} else{
+			cpf_f[j++] = cpf[i];
+		}
+	}
+
+	return cpf_f;
+}
+
 int main(){
     RegAst<Astronauta*> RegistroAstronautas;
 	int ans = 0;
@@ -101,6 +121,7 @@ int main(){
 	for(int i=0;i<RegistroAstronautas.getQuant();i++){
 		cout << "Nome: " << RegistroAstronautas.getAst(i)->getNome() << endl;
 		cout << "CPF: " << RegistroAstronautas.getAst(i)->getCPF() << endl;
+		cout << "CPF formatado: " << FormatCPF(RegistroAstronautas.getAst(i)->getCPF()) << endl;
 		cout << "Idade: " << RegistroAstronautas.getAst(i)->getIdade() << endl;
 	}
 
