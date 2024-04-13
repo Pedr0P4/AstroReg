@@ -87,11 +87,12 @@ char* FormatCPF(string cpf){
 	unsigned int j = 0; // Para controlar o índice de cpf_f.
 	char* cpf_f = new char[15]; //criação de um ponteiro para um array de char de tamanho 15.
 
+	//Adição de 0's para completar o cpf caso ele tenha menos de 11 de tamanho
 	if(stam < 11){
 		string temp(11 - stam, '0');
 		cpf += temp;
 		stam = cpf.length();
-	} else{
+	} else{ //Limitando a string caso o cpf passe de 11 de tamanho
 		stam = 11;
 	}
 
@@ -115,37 +116,6 @@ char* FormatCPF(string cpf){
 int main(){
     RegAst<Astronauta*> RegistroAstronautas;
 	int ans = 0;
-	int t_idade;
-	string t_cpf, t_nome;
-
-	cout << "Quer adicionar um astronauta? (1-SIM / 0-NÃO)" << endl;
-	cin >> ans;
-
-	while(ans == 1){
-		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-		cout << "Qual o nome do astronauta?" << endl;
-		getline(cin, t_nome);
-
-		cout << "Qual o CPF do astronauta?" << endl;
-		getline(cin, t_cpf);
-
-		cout << "Qual a idade do astronauta?" << endl;
-		cin >> t_idade;
-
-		Astronauta* ast = new Astronauta(t_idade, t_cpf, t_nome);
-		RegistroAstronautas.addE(ast);
-
-		cout << "Ainda quer adicionar? (1-SIM / 0-NÃO)" << endl;
-		cin >> ans;
-	}
-
-	for(int i=0;i<RegistroAstronautas.getQuant();i++){
-		cout << "Nome: " << RegistroAstronautas.getAst(i)->getNome() << endl;
-		cout << "CPF: " << RegistroAstronautas.getAst(i)->getCPF() << endl;
-		cout << "CPF formatado: " << FormatCPF(RegistroAstronautas.getAst(i)->getCPF()) << endl;
-		cout << "Idade: " << RegistroAstronautas.getAst(i)->getIdade() << endl;
-	}
 
     return 0;
 }
