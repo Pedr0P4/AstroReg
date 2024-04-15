@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <limits>
 #include <string>
 
@@ -133,6 +134,20 @@ Astronauta* addAstro(){
 	return astro;
 }
 
+int biggerName(RegAst<Astronauta*> Reg){
+	unsigned int qt = Reg.getQuant();
+	string text = Reg.getAst(0)->getNome();
+	unsigned int tamax = text.length();
+	unsigned int temptam;
+	for(int i=0;i<qt;i++){
+		text = Reg.getAst(i)->getNome();
+		temptam = text.length();
+		if(tamax < temptam){
+			tamax = temptam;
+		}
+	}
+	return tamax-1;}
+
 int main(){
     RegAst<Astronauta*> RegistroAstronautas;
 	int ans = -1;
@@ -147,13 +162,53 @@ int main(){
 			RegistroAstronautas.addE(addAstro());
 		}
 		if(ans == 2){
+			cout << "\nAstronautas:\n" << endl;
+
 			unsigned int qtastro = RegistroAstronautas.getQuant();
-			for(int i=0;i<qtastro;i++){
-				string t_cpf = RegistroAstronautas.getAst(i)->getCPF();
-				cout << endl;
-				cout << "Nome: " << RegistroAstronautas.getAst(i)->getNome() << endl;
-				cout << "CPF: " << formatCPF(t_cpf) << endl;
-				cout << "Idade: " << RegistroAstronautas.getAst(i)->getIdade() << " anos" << endl;
+
+			if(RegistroAstronautas.getQuant() == 0){
+				cout << "Não há astronautas cadastrados!" << endl;
+			} else{
+				unsigned int qt = RegistroAstronautas.getQuant();
+				string text = RegistroAstronautas.getAst(0)->getNome();
+				unsigned int tamax = text.length();
+				unsigned int temptam;
+
+				for(int i=0;i<qt;i++){
+					text = RegistroAstronautas.getAst(i)->getNome();
+					temptam = text.length();
+					if(tamax < temptam){
+						tamax = temptam;
+					}
+				}
+
+				int cpftamanho = 14;
+				int tampadrao = 16;
+				int tamtotal = (tamax-2) + tamax + cpftamanho + tampadrao + (cpftamanho/2) + tampadrao;
+
+				//Nomes das colunas.
+				cout << setw(tamax-2) << left << ""
+					<< setw(tamax+cpftamanho) << left << "Nome"
+					<< setw(tampadrao+(cpftamanho/2)) << left << "CPF"
+					<< setw(tampadrao) << left << "Idade"
+					<< endl;
+
+				//Linha para separar.
+				cout << setfill('-') << setw(tamtotal) << "-" << endl;
+				cout << setfill(' ');
+
+				//Print dos valores de cada astronauta.
+				for(int i=0;i<qtastro;i++){
+					string t_cpf = RegistroAstronautas.getAst(i)->getCPF();
+					cout << setw(tamax/2) << left << ""
+						<< setw(tamax+(tamax/2)) << left << RegistroAstronautas.getAst(i)->getNome()
+						<< setw((tampadrao/2)) << left << "||"
+						<< setw(cpftamanho+(tampadrao/2)) << left << formatCPF(t_cpf)
+						<< setw((tampadrao/2)) << left << "||"
+						<< setw((tampadrao/2)) << left << RegistroAstronautas.getAst(i)->getIdade()
+						<< setw((tampadrao/2)) << left << "||"
+						<< endl;
+				}
 			}
 			cout << endl;
 		}
