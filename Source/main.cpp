@@ -98,7 +98,7 @@ class Voo{
 			this->codigo = codigo;
 		}
 
-		int getCod(){
+		int getCode(){
 			return this->codigo;
 		}
 
@@ -167,6 +167,16 @@ Astronauta* addAstro(){
 	return astro; //Retorna o ponteiro.
 }
 
+Voo* addVoo(){
+	int code_voo;
+
+	cout << "Qual o código do voo?" << endl;
+	cin >> code_voo;
+
+	Voo* voo = new Voo(code_voo);
+	return voo;
+}
+
 int main(){
 	//Criação do vetor de ponteiros de Astronautas.
     Registros<Astronauta*> RegistroAstronautas;
@@ -179,8 +189,10 @@ int main(){
 	while(ans != 0){
 		//Impressão na tela para o "cardápio" de comandos.
 		cout << "Escolha uma das opções:" << endl;
-		cout << "1 - Adicionar astronauta.\n"
-			 << "2 - Mostrar astronautas.\n"
+		cout << "1 - Cadastrar astronauta.\n"
+			 << "2 - Exibir astronautas.\n"
+			 << "3 - Cadastrar voo.\n"
+			 << "4 - Exibit voos.\n"
 			 << "0 - Sair.\n";
 		cin >> ans; //Resposta do usuário.
 		if(ans == 1){ //Se for 1.
@@ -250,6 +262,20 @@ int main(){
 				}
 			}
 			cout << endl; //Pula linha
+		} else if(ans == 3){
+			RegistroVoos.addE(addVoo());	
+		} else if(ans == 4){
+			unsigned int qt_voos = RegistroVoos.getQuant();
+	
+			cout << "\nVoos:\n" << endl;
+
+			for(int i=0;i<qt_voos;i++){
+				cout << "Código do voo " << i+1 << ": "
+					 << RegistroVoos.getE(i)->getCode()
+					 << endl;
+			}
+
+			cout << endl;
 		}
 	}
 
