@@ -134,20 +134,6 @@ Astronauta* addAstro(){
 	return astro;
 }
 
-int biggerName(RegAst<Astronauta*> Reg){
-	unsigned int qt = Reg.getQuant();
-	string text = Reg.getAst(0)->getNome();
-	unsigned int tamax = text.length();
-	unsigned int temptam;
-	for(int i=0;i<qt;i++){
-		text = Reg.getAst(i)->getNome();
-		temptam = text.length();
-		if(tamax < temptam){
-			tamax = temptam;
-		}
-	}
-	return tamax-1;}
-
 int main(){
     RegAst<Astronauta*> RegistroAstronautas;
 	int ans = -1;
