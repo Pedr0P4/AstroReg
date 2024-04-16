@@ -290,6 +290,10 @@ int main(){
 
 				cout << endl;
 				break;
+			
+			case 0:
+				ans = 0;
+				break;
 
 			default:
 				break;
