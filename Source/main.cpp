@@ -197,92 +197,102 @@ int main(){
 			 << "Comando: ";
 		cin >> ans; //Resposta do usuário.
 		cout << endl;
-		if(ans == 1){ //Se for 1.
-			//Chama a função addE (adiciona um elemento no vetor) e, como parâmetro, recebe a função addAstro (cria um ponteiro de Astronauta).
-			RegistroAstronautas.addE(addAstro());
-			cout << endl;
-		} else if(ans == 2){ //Se não for 1, mas 2.
-			cout << "Astronautas:\n" << endl;
 
-			unsigned int qtastro = RegistroAstronautas.getQuant(); //Variável que carrega a quantidade de astronautas no vetor.
-													//^^^^^^^^^^^------> Função da classe do vetor que retorna a quantidade de elementos (astronautas).
-			//Caso não haja elementos no vetor (astronautas), imprime uma mensagem de erro.
-			if(qtastro == 0){
-				cout << "Não há astronautas cadastrados!" << endl;
+		unsigned int qtastro = RegistroAstronautas.getQuant(); //Variável que carrega a quantidade de astronautas no vetor.
+												//^^^^^^^^^^^------> Função da classe do vetor que retorna a quantidade de elementos (astronautas).
+		unsigned int qt_voos = RegistroVoos.getQuant();
+		
+		switch(ans){
+			case 1:
+				//Chama a função addE (adiciona um elemento no vetor) e, como parâmetro, recebe a função addAstro (cria um ponteiro de Astronauta).
+				RegistroAstronautas.addE(addAstro());
 				cout << endl;
-			} else{ //Caso haja elementos no vetor (astronautas).
-				
-				string text = RegistroAstronautas.getE(0)->getNome(); //Variável que pegará o nome de cada astronauta.
-				unsigned int tamax = text.length(); //Variável para armazenar o maior tamanho de nome, começará com o tamanho do nome do primeiro astronauta do vetor.
-				unsigned int temptam; //Variável que carregará um tamanho temporário para que haja a comparação.
+				break;
 
-				//Loop para que haja a comparação entre os tamanhos de cada elemento do vetor, pra no fim "tamax" carregar o tamanho do maior nome.
-				for(int i=0;i<qtastro;i++){
-					text = RegistroAstronautas.getE(i)->getNome();
-					temptam = text.length();
-					if(tamax < temptam){
-						tamax = temptam;
+			case 2:
+				cout << "Astronautas:\n" << endl;
+
+				//Caso não haja elementos no vetor (astronautas), imprime uma mensagem de erro.
+				if(qtastro == 0){
+					cout << "Não há astronautas cadastrados!" << endl;
+					cout << endl;
+				} else{ //Caso haja elementos no vetor (astronautas).
+
+					string text = RegistroAstronautas.getE(0)->getNome(); //Variável que pegará o nome de cada astronauta.
+					unsigned int tamax = text.length(); //Variável para armazenar o maior tamanho de nome, começará com o tamanho do nome do primeiro astronauta do vetor.
+					unsigned int temptam; //Variável que carregará um tamanho temporário para que haja a comparação.
+
+					//Loop para que haja a comparação entre os tamanhos de cada elemento do vetor, pra no fim "tamax" carregar o tamanho do maior nome.
+					for(int i=0;i<qtastro;i++){
+						text = RegistroAstronautas.getE(i)->getNome();
+						temptam = text.length();
+						if(tamax < temptam){
+							tamax = temptam;
+						}
 					}
-				}
 
-				int cpftamanho = 14; //Variável que carrega o tamanho máximo de um CPF já formatado.
-				int tampadrao = 16; //Variável que carrega o tamanho padrão (tamanho do cpf + 2 para que haja um pequeno espaçamento (2)).
-				int tamtotal = (tamax-2) + tamax + cpftamanho + (cpftamanho/2) + 3*tampadrao; //Tamanho total da largura da tabela.
+					int cpftamanho = 14; //Variável que carrega o tamanho máximo de um CPF já formatado.
+					int tampadrao = 16; //Variável que carrega o tamanho padrão (tamanho do cpf + 2 para que haja um pequeno espaçamento (2)).
+					int tamtotal = (tamax-2) + tamax + cpftamanho + (cpftamanho/2) + 3*tampadrao; //Tamanho total da largura da tabela.
 
-				//Nomes das colunas.
-				cout << setw(tamax-2) << left << ""
-					<< setw(tamax+cpftamanho) << left << "Nome"
-					<< setw(tampadrao+(cpftamanho/2)) << left << "CPF"
-					<< setw(tampadrao) << left << "Idade"
-					<< setw(tampadrao) << left << "Situação"
-					<< endl;
+					//Nomes das colunas.
+					cout << setw(tamax-2) << left << ""
+						 << setw(tamax+cpftamanho) << left << "Nome"
+						 << setw(tampadrao+(cpftamanho/2)) << left << "CPF"
+						 << setw(tampadrao) << left << "Idade"
+						 << setw(tampadrao) << left << "Situação"
+						 << endl;
 
-				//Linha para separar.
-				cout << setfill('-') << setw(tamtotal) << "-" << endl;
-				cout << setfill(' ');
+					//Linha para separar.
+					cout << setfill('-') << setw(tamtotal) << "-" << endl;
+					cout << setfill(' ');
 
-				//Print dos valores de cada astronauta.
-				for(int i=0;i<qtastro;i++){
-					string t_cpf = RegistroAstronautas.getE(i)->getCPF();
-					bool t_vivo = RegistroAstronautas.getE(i)->getVivo();
-					cout << setw(tamax/2) << left << ""
-						<< setw(tamax+(tamax/2)) << left << RegistroAstronautas.getE(i)->getNome()
-						<< setw((tampadrao/2)) << left << "||"
-						<< setw(cpftamanho+(tampadrao/2)) << left << formatCPF(t_cpf)
-						<< setw((tampadrao/2)) << left << "||"
-						<< setw((tampadrao/2)) << left << RegistroAstronautas.getE(i)->getIdade()
-						<< setw((tampadrao/2)) << left << "||";
-
-					//Se o astronauta estiver vivo, imprime que ele está vivo na coluna "Situação".
-					if(t_vivo){
-						cout << setw((tampadrao/2)+3) << left << "Vivo(a)"
+					//Print dos valores de cada astronauta.
+					for(int i=0;i<qtastro;i++){
+						string t_cpf = RegistroAstronautas.getE(i)->getCPF();
+						bool t_vivo = RegistroAstronautas.getE(i)->getVivo();
+						cout << setw(tamax/2) << left << ""
+							 << setw(tamax+(tamax/2)) << left << RegistroAstronautas.getE(i)->getNome()
 							 << setw((tampadrao/2)) << left << "||"
-							 << endl;
-					} else{ //Caso esteja morto (vivo = false), imprime que ele está morto na coluna "Situação".
-						cout << setw((tampadrao/2)+3) << left << "Morto(a)"
-							 << setw((tampadrao/2)) << right << "||"
-							 << endl;
+							 << setw(cpftamanho+(tampadrao/2)) << left << formatCPF(t_cpf)
+							 << setw((tampadrao/2)) << left << "||"
+							 << setw((tampadrao/2)) << left << RegistroAstronautas.getE(i)->getIdade()
+							 << setw((tampadrao/2)) << left << "||";
+
+						//Se o astronauta estiver vivo, imprime que ele está vivo na coluna "Situação".
+						if(t_vivo){
+							cout << setw((tampadrao/2)+3) << left << "Vivo(a)"
+								 << setw((tampadrao/2)) << left << "||"
+								 << endl;
+						} else{ //Caso esteja morto (vivo = false), imprime que ele está morto na coluna "Situação".
+							cout << setw((tampadrao/2)+3) << left << "Morto(a)"
+								 << setw((tampadrao/2)) << right << "||"
+								 << endl;
+						}
 					}
 				}
-			}
-			cout << endl; //Pula linha
-		} else if(ans == 3){
-			RegistroVoos.addE(addVoo());
-			cout << endl;
-		} else if(ans == 4){
-			unsigned int qt_voos = RegistroVoos.getQuant();
-	
-			cout << "Voos:\n" << endl;
+				cout << endl; //Pula linha
+				break;
 
-			for(int i=0;i<qt_voos;i++){
-				cout << "Código do voo " << i+1 << ": "
-					 << RegistroVoos.getE(i)->getCode()
-					 << endl;
-			}
+			case 3:
+				RegistroVoos.addE(addVoo());
+				cout << endl;
+				break;
 
-			cout << endl;
-		} else{
-			ans = 0;
+			case 4:
+				cout << "Voos:\n" << endl;
+
+				for(int i=0;i<qt_voos;i++){
+					cout << "Código do voo " << i+1 << ": "
+						<< RegistroVoos.getE(i)->getCode()
+						<< endl;
+				}
+
+				cout << endl;
+				break;
+
+			default:
+				break;
 		}
 	}
 
