@@ -54,6 +54,7 @@ template <typename T> class RegAst{
 class Astronauta{
     private:
         int idade; //Idade do astronauta.
+		bool vivo; //Se ele está vivo.
         string cpf; //CPF do astronauta.
         string nome; //Nome do astronauta.
 
@@ -61,6 +62,7 @@ class Astronauta{
 		//Construtor.
     	Astronauta(int idade, string cpf, string nome = "Pedro"){
 			this->idade = idade; //idade da classe recebe idade (parâmetro).
+			this->vivo = true; //vivo recebe true (NÃO é parâmetro).
 			this->cpf = cpf; //cpf da classe recebe cpf (parâmetro).
 			this->nome = nome; //nome da classe recebe nome (parâmetro).
 		}
@@ -68,6 +70,11 @@ class Astronauta{
 		//Função que retorna o valor da variável idade da classe.
 		int getIdade(){
 			return this->idade;
+		}
+
+		//Função que retorna se está vivo ou não.
+		bool getVivo(){
+			return this->vivo;
 		}
 
 		//Função que retorna o conteúdo da variável cpf da classe.
@@ -79,8 +86,6 @@ class Astronauta{
 		string getNome(){
 			return this->nome;
 		}
-
-
 };
 
 char* formatCPF(string cpf){
@@ -170,13 +175,14 @@ int main(){
 
 				int cpftamanho = 14;
 				int tampadrao = 16;
-				int tamtotal = (tamax-2) + tamax + cpftamanho + tampadrao + (cpftamanho/2) + tampadrao;
+				int tamtotal = (tamax-2) + tamax + cpftamanho + (cpftamanho/2) + 3*tampadrao;
 
 				//Nomes das colunas.
 				cout << setw(tamax-2) << left << ""
 					<< setw(tamax+cpftamanho) << left << "Nome"
 					<< setw(tampadrao+(cpftamanho/2)) << left << "CPF"
 					<< setw(tampadrao) << left << "Idade"
+					<< setw(tampadrao) << left << "Situação"
 					<< endl;
 
 				//Linha para separar.
@@ -186,14 +192,23 @@ int main(){
 				//Print dos valores de cada astronauta.
 				for(int i=0;i<qtastro;i++){
 					string t_cpf = RegistroAstronautas.getAst(i)->getCPF();
+					bool t_vivo = RegistroAstronautas.getAst(i)->getVivo();
 					cout << setw(tamax/2) << left << ""
 						<< setw(tamax+(tamax/2)) << left << RegistroAstronautas.getAst(i)->getNome()
 						<< setw((tampadrao/2)) << left << "||"
 						<< setw(cpftamanho+(tampadrao/2)) << left << formatCPF(t_cpf)
 						<< setw((tampadrao/2)) << left << "||"
 						<< setw((tampadrao/2)) << left << RegistroAstronautas.getAst(i)->getIdade()
-						<< setw((tampadrao/2)) << left << "||"
-						<< endl;
+						<< setw((tampadrao/2)) << left << "||";
+					if(t_vivo){
+						cout << setw((tampadrao/2)+3) << left << "Vivo(a)"
+							 << setw((tampadrao/2)) << left << "||"
+							 << endl;
+					} else{
+						cout << setw((tampadrao/2)+3) << left << "Morto(a)"
+							 << setw((tampadrao/2)) << right << "||"
+							 << endl;
+					}
 				}
 			}
 			cout << endl;
