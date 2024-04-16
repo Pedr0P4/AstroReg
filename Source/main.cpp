@@ -155,11 +155,11 @@ Astronauta* addAstro(){
 	getline(cin, nome);
 
 	//Coleta do CPF do astronauta.
-	cout << "Qual o CPF de " << nome << endl;
+	cout << "Qual o CPF de " << nome << "?" << endl;
 	getline(cin, cpf);
 
 	//Coleta da idade do astronauta.
-	cout << "Qual a idade de " << nome << endl;
+	cout << "Qual a idade de " << nome << "?" << endl;
 	cin >> idade;
 
 	//Ponteiro para criar um astronauta com os valores fornecidos pelo usuário.
@@ -193,19 +193,23 @@ int main(){
 			 << "2 - Exibir astronautas.\n"
 			 << "3 - Cadastrar voo.\n"
 			 << "4 - Exibit voos.\n"
-			 << "0 - Sair.\n";
+			 << "0 - Sair.\n"
+			 << "Comando: ";
 		cin >> ans; //Resposta do usuário.
+		cout << endl;
 		if(ans == 1){ //Se for 1.
 			//Chama a função addE (adiciona um elemento no vetor) e, como parâmetro, recebe a função addAstro (cria um ponteiro de Astronauta).
 			RegistroAstronautas.addE(addAstro());
+			cout << endl;
 		} else if(ans == 2){ //Se não for 1, mas 2.
-			cout << "\nAstronautas:\n" << endl;
+			cout << "Astronautas:\n" << endl;
 
 			unsigned int qtastro = RegistroAstronautas.getQuant(); //Variável que carrega a quantidade de astronautas no vetor.
 													//^^^^^^^^^^^------> Função da classe do vetor que retorna a quantidade de elementos (astronautas).
 			//Caso não haja elementos no vetor (astronautas), imprime uma mensagem de erro.
 			if(qtastro == 0){
 				cout << "Não há astronautas cadastrados!" << endl;
+				cout << endl;
 			} else{ //Caso haja elementos no vetor (astronautas).
 				
 				string text = RegistroAstronautas.getE(0)->getNome(); //Variável que pegará o nome de cada astronauta.
@@ -263,11 +267,12 @@ int main(){
 			}
 			cout << endl; //Pula linha
 		} else if(ans == 3){
-			RegistroVoos.addE(addVoo());	
+			RegistroVoos.addE(addVoo());
+			cout << endl;
 		} else if(ans == 4){
 			unsigned int qt_voos = RegistroVoos.getQuant();
 	
-			cout << "\nVoos:\n" << endl;
+			cout << "Voos:\n" << endl;
 
 			for(int i=0;i<qt_voos;i++){
 				cout << "Código do voo " << i+1 << ": "
@@ -276,6 +281,8 @@ int main(){
 			}
 
 			cout << endl;
+		} else{
+			ans = 0;
 		}
 	}
 
