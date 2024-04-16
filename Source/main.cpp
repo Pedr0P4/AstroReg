@@ -120,52 +120,62 @@ char* formatCPF(string cpf){
 }
 
 Astronauta* addAstro(){
-	string nome;
-	string cpf;
-	int idade;
+	string nome; //Variável para receber o nome do astronauta.
+	string cpf; //Variável para receber o CPF do astronauta.
+	int idade; // Variável para receber a idade do astronauta.
 
+	//Limpar o buffer.
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
+	//Coleta do nome do astronauta.
 	cout << "Qual o nome do astronauta?" << endl;
 	getline(cin, nome);
 
+	//Coleta do CPF do astronauta.
 	cout << "Qual o CPF de " << nome << endl;
 	getline(cin, cpf);
 
+	//Coleta da idade do astronauta.
 	cout << "Qual a idade de " << nome << endl;
 	cin >> idade;
 
+	//Ponteiro para criar um astronauta com os valores fornecidos pelo usuário.
 	Astronauta* astro = new Astronauta(idade, cpf, nome);
-	return astro;
+	return astro; //Retorna o ponteiro.
 }
 
 int main(){
+	//Criação do vetor de ponteiros de Astronautas.
     RegAst<Astronauta*> RegistroAstronautas;
-	int ans = -1;
+	int ans = -1; //Variável para as escolhas do usuário.
 
+	//Loop while para fazer o programa funcionar enquanto o usuário não quiser sair.
 	while(ans != 0){
+		//Impressão na tela para o "cardápio" de comandos.
 		cout << "Escolha uma das opções:" << endl;
 		cout << "1 - Adicionar astronauta.\n"
 			 << "2 - Mostrar astronautas.\n"
 			 << "0 - Sair.\n";
-		cin >> ans;
-		if(ans == 1){
+		cin >> ans; //Resposta do usuário.
+		if(ans == 1){ //Se for 1.
+			//Chama a função addE (adiciona um elemento no vetor) e, como parâmetro, recebe a função addAstro (cria um ponteiro de Astronauta).
 			RegistroAstronautas.addE(addAstro());
-		}
-		if(ans == 2){
+		} else if(ans == 2){ //Se não for 1, mas 2.
 			cout << "\nAstronautas:\n" << endl;
 
-			unsigned int qtastro = RegistroAstronautas.getQuant();
-
-			if(RegistroAstronautas.getQuant() == 0){
+			unsigned int qtastro = RegistroAstronautas.getQuant(); //Variável que carrega a quantidade de astronautas no vetor.
+													//^^^^^^^^^^^------> Função da classe do vetor que retorna a quantidade de elementos (astronautas).
+			//Caso não haja elementos no vetor (astronautas), imprime uma mensagem de erro.
+			if(qtastro == 0){
 				cout << "Não há astronautas cadastrados!" << endl;
-			} else{
-				unsigned int qt = RegistroAstronautas.getQuant();
-				string text = RegistroAstronautas.getAst(0)->getNome();
-				unsigned int tamax = text.length();
-				unsigned int temptam;
+			} else{ //Caso haja elementos no vetor (astronautas).
+				
+				string text = RegistroAstronautas.getAst(0)->getNome(); //Variável que pegará o nome de cada astronauta.
+				unsigned int tamax = text.length(); //Variável para armazenar o maior tamanho de nome, começará com o tamanho do nome do primeiro astronauta do vetor.
+				unsigned int temptam; //Variável que carregará um tamanho temporário para que haja a comparação.
 
-				for(int i=0;i<qt;i++){
+				//Loop para que haja a comparação entre os tamanhos de cada elemento do vetor, pra no fim "tamax" carregar o tamanho do maior nome.
+				for(int i=0;i<qtastro;i++){
 					text = RegistroAstronautas.getAst(i)->getNome();
 					temptam = text.length();
 					if(tamax < temptam){
@@ -173,9 +183,9 @@ int main(){
 					}
 				}
 
-				int cpftamanho = 14;
-				int tampadrao = 16;
-				int tamtotal = (tamax-2) + tamax + cpftamanho + (cpftamanho/2) + 3*tampadrao;
+				int cpftamanho = 14; //Variável que carrega o tamanho máximo de um CPF já formatado.
+				int tampadrao = 16; //Variável que carrega o tamanho padrão (tamanho do cpf + 2 para que haja um pequeno espaçamento (2)).
+				int tamtotal = (tamax-2) + tamax + cpftamanho + (cpftamanho/2) + 3*tampadrao; //Tamanho total da largura da tabela.
 
 				//Nomes das colunas.
 				cout << setw(tamax-2) << left << ""
@@ -200,18 +210,20 @@ int main(){
 						<< setw((tampadrao/2)) << left << "||"
 						<< setw((tampadrao/2)) << left << RegistroAstronautas.getAst(i)->getIdade()
 						<< setw((tampadrao/2)) << left << "||";
+
+					//Se o astronauta estiver vivo, imprime que ele está vivo na coluna "Situação".
 					if(t_vivo){
 						cout << setw((tampadrao/2)+3) << left << "Vivo(a)"
 							 << setw((tampadrao/2)) << left << "||"
 							 << endl;
-					} else{
+					} else{ //Caso esteja morto (vivo = false), imprime que ele está morto na coluna "Situação".
 						cout << setw((tampadrao/2)+3) << left << "Morto(a)"
 							 << setw((tampadrao/2)) << right << "||"
 							 << endl;
 					}
 				}
 			}
-			cout << endl;
+			cout << endl; //Pula linha
 		}
 	}
 
