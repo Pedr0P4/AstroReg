@@ -6,27 +6,27 @@
 using namespace std;
 
 //Classe para armazenar elementos de qualquer tipo (nesse caso do tipo "Astronauta").
-template <typename T> class RegAst{
+template <typename T> class Registros{
     private:
         unsigned int quant; //Variável de quantidade de elementos.
         T* elements; //Variável para os elementos.
     
     public:
 		//Construtor.
-        RegAst(){
+        Registros(){
             this->quant = 0; //A classe começa com 0 em quant.
             this->elements = new T[0]; //A classe começa com um ponteiro de um array com 0 elementos.
         }
 
 		//Função para adicionar elementos.
-        void addE(T ast){
+        void addE(T elem){
             T* novoArray = new T[quant+1]; //Criação de um ponteiro para um array do tamanho da quantidade de elementos atuais +1.
 
             for(int i=0;i<this->quant;i++){
                 novoArray[i] = this->elements[i]; //Copia todos os elementos de elements da classe para esse novo array.
             }
 
-            novoArray[this->quant] = ast; //No fim do array adiciona o elemento novo. 
+            novoArray[this->quant] = elem; //No fim do array adiciona o elemento novo. 
 
             delete this->elements; //Deleta o ponteiro dos elementos da classe.
             this->elements = novoArray; //Os elementos da classe agora recebem o novo array com o novo elemento e os anteriores.
@@ -35,7 +35,7 @@ template <typename T> class RegAst{
         }
 
 		//Função para mostrar o elemento na posição recebida no parâmetro (pos).
-		T getAst(unsigned int pos){
+		T getE(unsigned int pos){
 			return this->elements[pos];
 		}
 
@@ -45,7 +45,7 @@ template <typename T> class RegAst{
 		}
 
 		//Destrutor.
-		~RegAst(){
+		~Registros(){
 			delete[] elements;
 		}
 };
@@ -85,6 +85,29 @@ class Astronauta{
 		//Função que retorna o conteúdo da variável nome da classe.
 		string getNome(){
 			return this->nome;
+		}
+};
+
+class Voo{
+	private:
+		int codigo;
+		Registros<Astronauta*> RegistroTripulantes;
+
+	public:
+		Voo(int codigo){
+			this->codigo = codigo;
+		}
+
+		int getCod(){
+			return this->codigo;
+		}
+
+		unsigned int getQTripul(){
+			return this->RegistroTripulantes.getQuant();
+		}
+
+		void addTripul(Astronauta* ast){
+			this->RegistroTripulantes.addE(ast);
 		}
 };
 
@@ -146,7 +169,10 @@ Astronauta* addAstro(){
 
 int main(){
 	//Criação do vetor de ponteiros de Astronautas.
-    RegAst<Astronauta*> RegistroAstronautas;
+    Registros<Astronauta*> RegistroAstronautas;
+	//Criação do vetor de ponteiros de Voos.
+	Registros<Voo*> RegistroVoos;
+
 	int ans = -1; //Variável para as escolhas do usuário.
 
 	//Loop while para fazer o programa funcionar enquanto o usuário não quiser sair.
@@ -170,13 +196,13 @@ int main(){
 				cout << "Não há astronautas cadastrados!" << endl;
 			} else{ //Caso haja elementos no vetor (astronautas).
 				
-				string text = RegistroAstronautas.getAst(0)->getNome(); //Variável que pegará o nome de cada astronauta.
+				string text = RegistroAstronautas.getE(0)->getNome(); //Variável que pegará o nome de cada astronauta.
 				unsigned int tamax = text.length(); //Variável para armazenar o maior tamanho de nome, começará com o tamanho do nome do primeiro astronauta do vetor.
 				unsigned int temptam; //Variável que carregará um tamanho temporário para que haja a comparação.
 
 				//Loop para que haja a comparação entre os tamanhos de cada elemento do vetor, pra no fim "tamax" carregar o tamanho do maior nome.
 				for(int i=0;i<qtastro;i++){
-					text = RegistroAstronautas.getAst(i)->getNome();
+					text = RegistroAstronautas.getE(i)->getNome();
 					temptam = text.length();
 					if(tamax < temptam){
 						tamax = temptam;
@@ -201,14 +227,14 @@ int main(){
 
 				//Print dos valores de cada astronauta.
 				for(int i=0;i<qtastro;i++){
-					string t_cpf = RegistroAstronautas.getAst(i)->getCPF();
-					bool t_vivo = RegistroAstronautas.getAst(i)->getVivo();
+					string t_cpf = RegistroAstronautas.getE(i)->getCPF();
+					bool t_vivo = RegistroAstronautas.getE(i)->getVivo();
 					cout << setw(tamax/2) << left << ""
-						<< setw(tamax+(tamax/2)) << left << RegistroAstronautas.getAst(i)->getNome()
+						<< setw(tamax+(tamax/2)) << left << RegistroAstronautas.getE(i)->getNome()
 						<< setw((tampadrao/2)) << left << "||"
 						<< setw(cpftamanho+(tampadrao/2)) << left << formatCPF(t_cpf)
 						<< setw((tampadrao/2)) << left << "||"
-						<< setw((tampadrao/2)) << left << RegistroAstronautas.getAst(i)->getIdade()
+						<< setw((tampadrao/2)) << left << RegistroAstronautas.getE(i)->getIdade()
 						<< setw((tampadrao/2)) << left << "||";
 
 					//Se o astronauta estiver vivo, imprime que ele está vivo na coluna "Situação".
