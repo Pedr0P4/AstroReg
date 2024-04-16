@@ -142,13 +142,26 @@ char* formatCPF(string cpf){
 	return cpf_f;
 }
 
+void addTripulante(Voo* voo, Astronauta* astronauta){
+	voo->addTripul(astronauta);
+	cout << "Tripulante " 
+		 << astronauta->getNome()
+	     << " adicionado ao voo de código " 
+		 << voo->getCode()
+		 << endl;
+}
+
+void LimparBuffer(){
+	//Limpar o buffer.
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
 Astronauta* addAstro(){
 	string nome; //Variável para receber o nome do astronauta.
 	string cpf; //Variável para receber o CPF do astronauta.
 	int idade; // Variável para receber a idade do astronauta.
 
-	//Limpar o buffer.
-	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	LimparBuffer();
 
 	//Coleta do nome do astronauta.
 	cout << "Qual o nome do astronauta?" << endl;
@@ -165,6 +178,16 @@ Astronauta* addAstro(){
 	//Ponteiro para criar um astronauta com os valores fornecidos pelo usuário.
 	Astronauta* astro = new Astronauta(idade, cpf, nome);
 	return astro; //Retorna o ponteiro.
+}
+
+Astronauta* getAstroByCPF(string cpf, Registros<Astronauta*> RegAst){
+	unsigned int qtastro = RegAst.getQuant();
+	for(int i=0;i<qtastro;i++){
+		string t_cpf = RegAst.getE(i)->getCPF();
+		if(cpf == t_cpf){
+			return;
+		}
+	}
 }
 
 Voo* addVoo(){
@@ -192,7 +215,8 @@ int main(){
 		cout << "1 - Cadastrar astronauta.\n"
 			 << "2 - Exibir astronautas.\n"
 			 << "3 - Cadastrar voo.\n"
-			 << "4 - Exibit voos.\n"
+			 << "4 - Exibir voos.\n"
+			 << "5 - Cadastrar tripulante\n"
 			 << "0 - Sair.\n"
 			 << "Comando: ";
 		cin >> ans; //Resposta do usuário.
@@ -289,6 +313,20 @@ int main(){
 				}
 
 				cout << endl;
+				break;
+			
+			case 5:
+				int temp_code;
+				string temp_cpf;
+
+				LimparBuffer();
+
+				cout << "Digite o voo que será adicionado o tripulante:" << endl;
+				cin >> temp_code;
+
+				cout << "Digite o CPF do astronauta que será adicionado na tripulação" << endl;
+				getline(cin, temp_cpf);
+
 				break;
 			
 			case 0:
