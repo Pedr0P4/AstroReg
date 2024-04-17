@@ -367,23 +367,32 @@ int main(){
 		} else if(ans == 5){ //Caso o comando seja o 5, cadastra um tripulante em um determinado voo.
 			int temp_code; //Variável para o código do voo (temporário).
 			string temp_cpf; //Variável para o CPF do astronauta (temporário).
+			LimparBuffer(); //Limpa o buffer.
 
 			//Coleta do código do voo desejado.
 			cout << "Digite o voo que será adicionado o tripulante:" << endl;
 			cin >> temp_code;
 
-			LimparBuffer(); //Limpa o buffer.
-
-			//Coleta do CPF do astronauta desejado.
-			cout << "Digite o CPF do astronauta que será adicionado na tripulação" << endl;
-			getline(cin, temp_cpf);
-
-			//Criação das variáveis para armazenar o voo desejado pelo código e o astronauta desejado pelo cpf.
-			Astronauta* cpf_astro = getAstroByCPF(temp_cpf, RegistroAstronautas);
 			Voo* code_voo = getVooByCode(temp_code, RegistroVoos);
 
-			//Adiciona o astronauta no voo desejado.
-			addTripulante(code_voo, cpf_astro);
+			if(code_voo != NULL){
+				LimparBuffer(); //Limpa o buffer.
+
+				//Coleta do CPF do astronauta desejado.
+				cout << "Digite o CPF do astronauta que será adicionado na tripulação" << endl;
+				getline(cin, temp_cpf);
+
+				//Criação da variável para armazenar o astronauta desejado pelo cpf.
+				Astronauta* cpf_astro = getAstroByCPF(temp_cpf, RegistroAstronautas);
+
+				if(cpf_astro != NULL){
+					//Adiciona o astronauta no voo desejado.
+					addTripulante(code_voo, cpf_astro);
+				}	
+			}
+
+			temp_code = 0;
+			temp_cpf = "";
 		}
 	}
 
