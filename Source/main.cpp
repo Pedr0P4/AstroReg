@@ -115,6 +115,7 @@ class Voo{
 			this->RegistroTripulantes.addE(ast);
 		}
 
+		//Função que retorna o vetor de tripulantes.
 		Registros<Astronauta*> getVTripul(){
 			return this->RegistroTripulantes;
 		}
@@ -243,10 +244,19 @@ void addTripulanteCompleto(Registros<Voo*> &RegistroVoos, Registros<Astronauta*>
 
 	unsigned int qtvoo = RegistroVoos.getQuant(); //Variável que pega a quantidade de voos cadastrados.
 	
-	if(qtvoo <= 0){
+	//Se quantidade de voos for 0, retorna uma mensagem de erro.
+	if(qtvoo == 0){
 		cout << "Não há nenhum voo cadastrado. Cadastre um com o comando 3!" << endl;
 		return;
 	}	
+
+	unsigned int qtastro = RegistroAstronautas.getQuant(); //Variável que pega a quantidade de astronautas cadastrados.
+	
+	//Se a quantidade de astronautas for 0, retorna uma mensagem de erro.
+	if(qtastro == 0){
+		cout << "Não há nenhum astronauta cadastrado. Cadastre um com o comando 1!" << endl;
+		return;
+	}
 
     // Coleta do código do voo desejado.
     cout << "Digite o código do voo para adicionar o tripulante:" << endl;
@@ -275,29 +285,44 @@ void addTripulanteCompleto(Registros<Voo*> &RegistroVoos, Registros<Astronauta*>
     addTripulante(code_voo, cpf_astro);
 }
 
+//Função para mostrar os tripulantes de um voo.
 void showTripul(int code, Registros<Voo*> &RegVoos){
-	Voo* code_voo;
-	int qtvoo = RegVoos.getQuant();
+	Voo* code_voo = NULL; //Variável do tipo Voo* para armazenar um voo (começa com NULL).
+	int qtvoo = RegVoos.getQuant(); //Variável que armazena a quantidade de voos do vetor.
 
+	//Loop para verificar se há um voo com o código fornecido pelo usuário.
 	for(int i=0;i<qtvoo;i++){
 		int t_code = RegVoos.getE(i)->getCode();
 		if(code == t_code){
-			code_voo = RegVoos.getE(i);
+			code_voo = RegVoos.getE(i); //code_voo recebe o voo de código igual.
 			break;
 		}
 	}
 
-	unsigned int qttripul = code_voo->getQTripul();
-	Registros<Astronauta*> RegTripul = code_voo->getVTripul();
+	//Se o code_voo permanecer NULL, retorna uma mensagem de erro.
+	if(code_voo == NULL){
+		cout << "Não há nenhum voo com o código fornecido!" << endl;
+		return;
+	}
 
+	unsigned int qttripul = code_voo->getQTripul(); //Variável que armazena a quantidade de tripulantes do voo.
+	Registros<Astronauta*> RegTripul = code_voo->getVTripul(); //Variável que armazena o vetor de tripulantes do voo.
+
+	//Se a quantidade de tripulantes for 0, retorna uma mensagem de erro.
+	if(qttripul == 0){
+		cout << "Não há nenhum astronauta cadastrado nesse voo. Cadastre com o comando 5!" << endl;
+		return;
+	}
+
+	//Loop para exibir (imprimir na tela) os tripulantes do voo do código fornecido pelo usuário.
 	for(int i=0;i<qttripul;i++){
-		string t_cpf = RegTripul.getE(i)->getCPF();
-		char* cpf_f = formatCPF(t_cpf);
+		string t_cpf = RegTripul.getE(i)->getCPF(); //Variável do tipo string para armazenar temporariamente o CPF do loop atual.
+		char* cpf_f = formatCPF(t_cpf); //Variável do tipo char* para armazenar o CPF temporário formatado (com .'s e -'s).
 
-		cout << "TRIPULANTE " << i+1 << ":" << endl;
-		cout << "Nome: " << RegTripul.getE(i)->getNome() << endl;
-		cout << "CPF: " << cpf_f << endl;
-		cout << endl;
+		cout << "TRIPULANTE " << i+1 << ":" << endl; //Título
+		cout << "Nome: " << RegTripul.getE(i)->getNome() << endl; //Nome do tripulante.
+		cout << "CPF: " << cpf_f << endl; //CPF do tripulante (já formatado).
+		cout << endl; //Pula linha.
 	}
 }
 
@@ -418,13 +443,16 @@ int main(){
 			addTripulanteCompleto(RegistroVoos, RegistroAstronautas); //Chama a função para adicionar tripulante no voo.
 			cout << endl; //Pula linha.
 		} else if(ans == 7){
-			int code;
+			int code; //Variável para o código.
 
+			//Coleta do código do voo.
 			cout << "Qual o código do voo que deseja exibir os tripulantes: " << endl;
 			cin >> code;
 			cout << endl;
 
+			//Função para mostrar os tripulantes.
 			showTripul(code, RegistroVoos);
+			cout << endl;
 		}
 	}
 
