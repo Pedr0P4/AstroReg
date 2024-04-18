@@ -341,7 +341,7 @@ void showTripul(int code, Registros<Voo*> &RegVoos){
 	}
 }
 
-void delTripulante(int code, Astronauta* astro, Registros<Voo*> &RegVoos){
+void delTripulante(int code, Astronauta* &astro, Registros<Voo*> &RegVoos){
 	Voo* code_voo = NULL; //Variável do tipo Voo* para armazenar um voo (começa com NULL).
 	int qtvoo = RegVoos.getQuant(); //Variável que armazena a quantidade de voos do vetor.
 
