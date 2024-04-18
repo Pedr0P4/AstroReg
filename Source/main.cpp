@@ -114,6 +114,10 @@ class Voo{
 		void addTripul(Astronauta* ast){
 			this->RegistroTripulantes.addE(ast);
 		}
+
+		Registros<Astronauta*> getVTripul(){
+			return this->RegistroTripulantes;
+		}
 };
 
 char* formatCPF(string cpf){
@@ -151,9 +155,9 @@ char* formatCPF(string cpf){
 void addTripulante(Voo* voo, Astronauta* astronauta){
 	voo->addTripul(astronauta); //Parâmetro voo do tipo Voo* adiciona o tripulante astronauta (parâmetro), utilizando a função da classe Voo (addTripul). 
 	//Impressão para verificação se tudo está nos conformes.
-	cout << "Tripulante " 
+	cout << "Astronauta " 
 		 << astronauta->getNome()
-	     << " adicionado ao voo de código " 
+	     << " adicionado(a) ao voo de código " 
 		 << voo->getCode()
 		 << endl;
 }
@@ -271,6 +275,32 @@ void addTripulanteCompleto(Registros<Voo*> &RegistroVoos, Registros<Astronauta*>
     addTripulante(code_voo, cpf_astro);
 }
 
+void showTripul(int code, Registros<Voo*> &RegVoos){
+	Voo* code_voo;
+	int qtvoo = RegVoos.getQuant();
+
+	for(int i=0;i<qtvoo;i++){
+		int t_code = RegVoos.getE(i)->getCode();
+		if(code == t_code){
+			code_voo = RegVoos.getE(i);
+			break;
+		}
+	}
+
+	unsigned int qttripul = code_voo->getQTripul();
+	Registros<Astronauta*> RegTripul = code_voo->getVTripul();
+
+	for(int i=0;i<qttripul;i++){
+		string t_cpf = RegTripul.getE(i)->getCPF();
+		char* cpf_f = formatCPF(t_cpf);
+
+		cout << "TRIPULANTE " << i+1 << ":" << endl;
+		cout << "Nome: " << RegTripul.getE(i)->getNome() << endl;
+		cout << "CPF: " << cpf_f << endl;
+		cout << endl;
+	}
+}
+
 int main(){
 	//Criação do vetor de ponteiros de Astronautas.
     Registros<Astronauta*> RegistroAstronautas;
@@ -287,7 +317,8 @@ int main(){
 			 << "2 - Exibir astronautas.\n"
 			 << "3 - Cadastrar voo.\n"
 			 << "4 - Exibir voos.\n"
-			 << "5 - Cadastrar tripulante\n"
+			 << "5 - Cadastrar tripulante.\n"
+			 << "7 - Exibir tripulantes cadastrados.\n"
 			 << "0 - Sair.\n"
 			 << "Comando: ";
 		cin >> ans; //Resposta do usuário.
@@ -386,6 +417,14 @@ int main(){
 		} else if(ans == 5){ //Caso o comando seja o 5, cadastra um tripulante em um determinado voo.
 			addTripulanteCompleto(RegistroVoos, RegistroAstronautas); //Chama a função para adicionar tripulante no voo.
 			cout << endl; //Pula linha.
+		} else if(ans == 7){
+			int code;
+
+			cout << "Qual o código do voo que deseja exibir os tripulantes: " << endl;
+			cin >> code;
+			cout << endl;
+
+			showTripul(code, RegistroVoos);
 		}
 	}
 
