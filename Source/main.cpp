@@ -34,6 +34,21 @@ template <typename T> class Registros{
             this->quant++; //Quantidade de elementos é incrementado em 1.
         }
 
+		void delE(T elem){
+			T* novoArray = new T[quant-1];
+
+			for(int i=0;i<this->quant;i++){
+				if(elem != elements[i]){
+					novoArray[i] = this->elements[i];
+				}
+
+				delete this->elements;
+				this->elements = novoArray;
+
+				this->quant--;
+			}
+		}
+
 		//Função para mostrar o elemento na posição recebida no parâmetro (pos).
 		T getE(unsigned int pos){
 			return this->elements[pos];
@@ -326,6 +341,30 @@ void showTripul(int code, Registros<Voo*> &RegVoos){
 	}
 }
 
+void delTripulante(int code, Astronauta* astro, Registros<Voo*> &RegVoos){
+	Voo* code_voo = NULL; //Variável do tipo Voo* para armazenar um voo (começa com NULL).
+	int qtvoo = RegVoos.getQuant(); //Variável que armazena a quantidade de voos do vetor.
+
+	//Loop para verificar se há um voo com o código fornecido pelo usuário.
+	for(int i=0;i<qtvoo;i++){
+		int t_code = RegVoos.getE(i)->getCode();
+		if(code == t_code){
+			code_voo = RegVoos.getE(i); //code_voo recebe o voo de código igual.
+			break;
+		}
+	}
+
+	//Se o code_voo permanecer NULL, retorna uma mensagem de erro.
+	if(code_voo == NULL){
+		cout << "Não há nenhum voo com o código fornecido!" << endl;
+		return;
+	}
+
+	Registros<Astronauta*> RegTripul = code_voo->getVTripul(); //Variável que armazena o vetor de tripulantes do voo.
+
+	RegTripul.delE(astro);
+}
+
 int main(){
 	//Criação do vetor de ponteiros de Astronautas.
     Registros<Astronauta*> RegistroAstronautas;
@@ -343,6 +382,7 @@ int main(){
 			 << "3 - Cadastrar voo.\n"
 			 << "4 - Exibir voos.\n"
 			 << "5 - Cadastrar tripulante.\n"
+			 << "6 - Apagar tripulante.\n"
 			 << "7 - Exibir tripulantes cadastrados.\n"
 			 << "0 - Sair.\n"
 			 << "Comando: ";
@@ -442,6 +482,26 @@ int main(){
 		} else if(ans == 5){ //Caso o comando seja o 5, cadastra um tripulante em um determinado voo.
 			addTripulanteCompleto(RegistroVoos, RegistroAstronautas); //Chama a função para adicionar tripulante no voo.
 			cout << endl; //Pula linha.
+		} else if(ans == 6){
+			int code; //Variável para o código.
+			string cpf;
+
+			//Coleta do código do voo.
+			cout << "Qual o código do voo que deseja deletar um tripulante? " << endl;
+			cin >> code;
+			cout << endl;
+
+			LimparBuffer();
+
+			cout << "Qual o astronauta deseja deletar do voo? " << endl;
+			getline(cin, cpf);
+			cout << endl;
+
+			Astronauta* astro_cpf = getAstroByCPF(cpf, RegistroAstronautas);
+
+			//Função para mostrar os tripulantes.
+			delTripulante(code, astro_cpf, RegistroVoos);
+			cout << endl;
 		} else if(ans == 7){
 			int code; //Variável para o código.
 
