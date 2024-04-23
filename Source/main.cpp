@@ -208,17 +208,21 @@ Astronauta* addAstro(){
 
 	LimparBuffer(); //Limpa o buffer.
 
+	cout << "-----------------------------------" << endl;
 	//Coleta do nome do astronauta.
 	cout << "Qual o nome do astronauta?" << endl;
 	getline(cin, nome);
+	cout << "-----------------------------------" << endl;
 
 	//Coleta do CPF do astronauta.
 	cout << "Qual o CPF de " << nome << "?" << endl;
 	getline(cin, cpf);
+	cout << "-----------------------------------" << endl;
 
 	//Coleta da idade do astronauta.
 	cout << "Qual a idade de " << nome << "?" << endl;
 	cin >> idade;
+	cout << "-----------------------------------" << endl;
 
 	//Ponteiro para criar um astronauta com os valores fornecidos pelo usuário.
 	Astronauta* astro = new Astronauta(idade, cpf, nome);
@@ -245,9 +249,11 @@ Astronauta* getAstroByCPF(string cpf, Registros<Astronauta*> &RegAst){
 Voo* addVoo(){
 	int code_voo; //Variável para o código do voo.
 
+	cout << "-----------------------------------" << endl;
 	//Coleta do código do voo.
 	cout << "Qual o código do voo?" << endl;
 	cin >> code_voo;
+	cout << "-----------------------------------" << endl;
 
 	//novo voo do tipo Voo* é criado (ponteiro).
 	Voo* voo = new Voo(code_voo);
@@ -288,13 +294,16 @@ void showTripul(Voo* voo, Registros<Tripulante*> &RegTripul){
 	for(int i=0;i<TQuant;i++){
 		int TripCode = RegTripul.getE(i)->getTCode();
 		if(TripCode == voo_code){
+			cout << "----------------------------------------------" << endl;
 			Tripulante* tripulante = RegTripul.getE(i);
+			cout << "Tripulante " << i << ":\n" << endl;
 			cout << "Nome: " << tripulante->getTNome() << endl;
 			cout << "Idade: " << tripulante->getTIdade() << endl;
 			cout << "CPF: " << tripulante->getTCPF() << endl;
-			cout << endl;
 		}
 	}
+	cout << "----------------------------------------------" << endl;
+	cout << endl;
 }
 
 int main(){
@@ -416,6 +425,7 @@ int main(){
 			int temp_code;
 			string temp_cpf;
 
+			cout << "\n----------------------------------------------" << endl;
 			cout << "Qual o código do voo que será cadastrado um tripulante?" << endl;
 			cin >> temp_code;
 			Voo* temp_voo = getVooByCode(temp_code, RegistroVoos);
@@ -423,6 +433,7 @@ int main(){
 			if(temp_voo != NULL){
 				LimparBuffer();
 
+				cout << "----------------------------------------------" << endl;
 				cout << "Qual o CPF do astronauta que deseja cadastrar?" << endl;
 				getline(cin, temp_cpf);
 				Astronauta* temp_astro = getAstroByCPF(temp_cpf, RegistroAstronautas);
@@ -435,13 +446,19 @@ int main(){
 						 << "."
 						 << endl;
 
+					cout << "----------------------------------------------" << endl;
 					RegistroTripulantes.addE(addTripul(temp_voo, temp_astro));
 					temp_voo->OneT();
+					cout << "----------------------------------------------" << endl;
 				} else{
+					cout << "\n----------------------------------------------" << endl;
 					cout << "Não há nenhum astronauta com o CPF fornecido." << endl;
+					cout << "----------------------------------------------" << endl;	
 				}
 			} else{
+				cout << "\n----------------------------------------------" << endl;
 				cout << "Não há nenhum voo com o código fornecido." << endl;
+				cout << "----------------------------------------------" << endl;
 			}
 
 			cout << endl; //Pula linha.
@@ -449,18 +466,25 @@ int main(){
 			int code; 
 			string cpf;
 
+			cout << "\n----------------------------------------------" << endl;
 			cout << "Qual o código do voo que deseja deletar um tripulante? " << endl;
 			cin >> code;
+
+			cout << "----------------------------------------------" << endl;
 			cout << "Qual o CPF do astronauta que deseja remover? " << endl;
 			cin >> cpf;
+			cout << "----------------------------------------------" << endl;
 
 			//delTripulante(code, cpf, RegistroVoos, RegistroAstronautas);
+			
+			cout << endl;
 		} else if(ans == 7){
 			int code;
 
+			cout << "\n----------------------------------------------" << endl;
 			cout << "Qual o código do voo que deseja ver seus tripulantes?" << endl;
 			cin >> code;
-			Voo* voo = getVooByCode(code, RegistroVoos);
+			Voo* voo = getVooByCode(code, RegistroVoos);	
 
 			if(voo != NULL && voo->getTQuant() > 0){
 				showTripul(voo, RegistroTripulantes);	
