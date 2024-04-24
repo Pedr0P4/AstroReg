@@ -209,7 +209,23 @@ void LimparBuffer(){
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-Astronauta* addAstro(){
+//Função que pega um astronauta pelo CPF.
+Astronauta* getAstroByCPF(string cpf, Registros<Astronauta*> &RegAst){
+	unsigned int qtastro = RegAst.getQuant(); //Variável que recebe a quantidade de astronautas do vetor RegAst (parâmetro).
+
+	//Loop para comparar os cpfs de cada astronauta do vetor para ver qual é igual.
+	for(int i=0;i<qtastro;i++){
+		string t_cpf = RegAst.getE(i)->getCPF();
+		if(cpf == t_cpf){
+			return RegAst.getE(i); //Retorna o astronauta.
+		}
+	}
+
+	return NULL; //Retorna Vazio.
+}
+
+//Função que retorna um astronauta com todos os dados preenchidos.
+Astronauta* addAstro(Registros<Astronauta*> &RegAst){
 	string nome; //Variável para receber o nome do astronauta.
 	string cpf; //Variável para receber o CPF do astronauta.
 	int idade; // Variável para receber a idade do astronauta.
@@ -227,48 +243,25 @@ Astronauta* addAstro(){
 	getline(cin, cpf);
 	cout << "-----------------------------------" << endl;
 
-	//Coleta da idade do astronauta.
-	cout << "Qual a idade de " << nome << "?" << endl;
-	cin >> idade;
-	cout << "-----------------------------------" << endl;
-
-	//Ponteiro para criar um astronauta com os valores fornecidos pelo usuário.
-	Astronauta* astro = new Astronauta(idade, cpf, nome);
-	return astro; //Retorna o ponteiro.
-}
-
-//Função que pega o astronauta pelo CPF.
-Astronauta* getAstroByCPF(string cpf, Registros<Astronauta*> &RegAst){
-	unsigned int qtastro = RegAst.getQuant(); //Variável que recebe a quantidade de astronautas do vetor RegAst (parâmetro).
-
-	//Loop para comparar os cpfs de cada astronauta do vetor para ver qual é igual.
-	for(int i=0;i<qtastro;i++){
-		string t_cpf = RegAst.getE(i)->getCPF();
-		if(cpf == t_cpf){
-			return RegAst.getE(i); //Retorna o astronauta.
-		}
+	if(getAstroByCPF(cpf, RegAst) != NULL){
+		cout << "Já há um CPF igual ao fornecido. Tente um novo!" << endl;
+		cout << "-----------------------------------" << endl;
+		return NULL;
+	} else{
+		//Coleta da idade do astronauta.
+		cout << "Qual a idade de " << nome << "?" << endl;
+		cin >> idade;
+		cout << "-----------------------------------" << endl;
+		
+		//Ponteiro para criar um astronauta com os valores fornecidos pelo usuário.
+		Astronauta* astro = new Astronauta(idade, cpf, nome);
+		return astro; //Retorna o ponteiro.
 	}
 
-	cout << "Não há um astronauta com o CPF fornecido!" << endl; //Mensagem de erro
-	return NULL; //Retorna Vazio.
+	
 }
 
-//Função que adiciona um voo no vetor de voos;
-Voo* addVoo(){
-	int code_voo; //Variável para o código do voo.
-
-	cout << "-----------------------------------" << endl;
-	//Coleta do código do voo.
-	cout << "Qual o código do voo?" << endl;
-	cin >> code_voo;
-	cout << "-----------------------------------" << endl;
-
-	//novo voo do tipo Voo* é criado (ponteiro).
-	Voo* voo = new Voo(code_voo);
-	return voo; //retorna voo,
-}
-
-//Função que retorna um voo com todas os dados preenchidos.
+//Função que acha um voo pelo código.
 Voo* getVooByCode(int code, Registros<Voo*> &RegVoos){
 	unsigned int qtvoo = RegVoos.getQuant(); //Variável que recebe a quantidade de voos do vetor RegVoos (parâmetro).
 
@@ -280,8 +273,28 @@ Voo* getVooByCode(int code, Registros<Voo*> &RegVoos){
 		}
 	}
 
-	cout << "Não há um voo com o código fornecido!" << endl; //Mensagem de erro.
 	return NULL; //Retorna Vazio.
+}
+
+//Função que retorna um voo com todos os dados preenchidos.
+Voo* addVoo(Registros<Voo*> &RegVoo){
+	int code_voo; //Variável para o código do voo.
+
+	cout << "-----------------------------------" << endl;
+	//Coleta do código do voo.
+	cout << "Qual o código do voo?" << endl;
+	cin >> code_voo;
+	cout << "-----------------------------------" << endl;
+
+	if(getVooByCode(code_voo, RegVoo) != NULL){
+		cout << "Já há um voo com o código fornecido. Tente um novo!" << endl;
+		cout << "-----------------------------------" << endl;
+		return NULL;
+	} else{
+		//novo voo do tipo Voo* é criado (ponteiro).
+		Voo* voo = new Voo(code_voo);
+		return voo; //retorna voo,
+	}
 }
 
 //Função que retorna um tripulante com todos os dados preenchidos.
@@ -298,8 +311,9 @@ Tripulante* addTripul(Voo* voo, Astronauta* astronauta){
 
 //Função para imprimir na tela os tripulantes de um voo.
 void showTripul(Voo* voo, Registros<Tripulante*> &RegTripul){
-	unsigned int TQuant = voo->getTQuant(); //Variável que recebe a quantidade de tripulantes cadastrados em um voo.
+	unsigned int TQuant = RegTripul.getQuant(); //Variável que recebe a quantidade de tripulantes cadastrados em um voo.
 	int voo_code = voo->getCode(); //Variável que recebe o código do voo.
+	int j = 0;
 
 	//Loop para imprimir os tripulantes.
 	for(int i=0;i<TQuant;i++){
@@ -307,10 +321,10 @@ void showTripul(Voo* voo, Registros<Tripulante*> &RegTripul){
 		if(TripCode == voo_code){
 			cout << "----------------------------------------------" << endl;
 			Tripulante* tripulante = RegTripul.getE(i);
-			cout << "Tripulante " << i << ":\n" << endl;
+			cout << "Tripulante " << ++j << ":\n" << endl;
 			cout << "Nome: " << tripulante->getTNome() << endl;
+			cout << "CPF: " << formatCPF(tripulante->getTCPF()) << endl;
 			cout << "Idade: " << tripulante->getTIdade() << endl;
-			cout << "CPF: " << tripulante->getTCPF() << endl;
 		}
 	}
 	cout << "----------------------------------------------" << endl;
@@ -322,6 +336,7 @@ int main(){
     Registros<Astronauta*> RegistroAstronautas;
 	//Criação do vetor de ponteiros de Voos.
 	Registros<Voo*> RegistroVoos;
+	//Criação do vetor de ponteiros de Tripulantes.
 	Registros<Tripulante*> RegistroTripulantes;
 
 	int ans = -1; //Variável para as escolhas do usuário.
@@ -347,9 +362,16 @@ int main(){
 		unsigned int qt_voos = RegistroVoos.getQuant();
 		
 		if(ans == 1){
-			//Chama a função addE (adiciona um elemento no vetor) e, como parâmetro, recebe a função addAstro (cria um ponteiro de Astronauta).
-			RegistroAstronautas.addE(addAstro());
-			cout << endl;
+			//Variável do tipo Astronauta* que recebe a função addAstro.
+			Astronauta* astro = addAstro(RegistroAstronautas);
+
+			if(astro != NULL){
+				//Chama a função addE (adiciona um elemento no vetor) e, como parâmetro, recebe astro.
+				RegistroAstronautas.addE(astro);
+				cout << endl;
+			} else{
+				cout << endl;
+			}
 		} else if(ans == 2){
 			cout << "Astronautas:\n" << endl;
 
@@ -413,8 +435,15 @@ int main(){
 			}
 			cout << endl; //Pula linha
 		} else if(ans == 3){ //Caso o comando seja o 3, adiciona um voo no vetor RegistroVoos.
-			RegistroVoos.addE(addVoo());
-			cout << endl;
+			Voo* voo = addVoo(RegistroVoos);
+			
+			if(voo != NULL){
+				RegistroVoos.addE(voo);
+				cout << endl;
+			} else{
+				cout << endl;
+			}
+
 		} else if(ans == 4){ //Caso o comando seja o 4, Mostra os voos cadastrados no vetor RegistroVoos.
 			unsigned int qtvoo = RegistroVoos.getQuant(); //Variável para a quantidade de voos no vetor.
 
@@ -456,6 +485,7 @@ int main(){
 
 				//Se houver um astronauta com o CPF fornecido.
 				if(temp_astro != NULL){
+					cout << "----------------------------------------------" << endl;
 					//Imprime a mensagem de que tudo deu certo!
 					cout << "Astronauta "
 						 << temp_astro->getNome()
@@ -463,8 +493,6 @@ int main(){
 						 << temp_voo->getCode()
 						 << "."
 						 << endl;
-
-					cout << "----------------------------------------------" << endl;
 					//Adiciona o tripulante utilizando o voo e o astronauta adquiridos pela coleta das informações e armazena no vetor de tripulantes.
 					RegistroTripulantes.addE(addTripul(temp_voo, temp_astro));
 					temp_voo->OneT(); //Incrementa em um a quantidade de tripulantes no voo na qual o tripulante foi cadastrado.
@@ -511,6 +539,14 @@ int main(){
 			if(voo != NULL && voo->getTQuant() > 0){
 				//Chama a função para mostrar os tripulantes.
 				showTripul(voo, RegistroTripulantes);	
+			} else if(voo == NULL){
+				cout << "----------------------------------------------" << endl;
+				cout << "Não há nenhum voo com o código fornecido..." << endl;
+				cout << "----------------------------------------------" << endl;
+			} else if(voo->getTQuant() <= 0){
+				cout << "----------------------------------------------" << endl;
+				cout << "Não há nenhum tripulante cadastrado no voo..." << endl;
+				cout << "----------------------------------------------" << endl;
 			}
 		}
 	}
