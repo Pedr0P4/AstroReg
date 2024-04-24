@@ -108,13 +108,13 @@ class Astronauta{
 class Voo{
 	private:
 		int codigo; //Código do voo
-		unsigned int Tquant;
+		unsigned int Tquant; //Quantidade de tripulantes cadastrados.
 
 	public:
 		//Construtor
 		Voo(int codigo){
 			this->codigo = codigo; //codigo da classe recebe codigo (parâmetro).
-			this->Tquant = 0;
+			this->Tquant = 0; //Quantidade de tripulantes recebe 0.
 		}
 
 		//Função que retorna o código do voo.
@@ -122,42 +122,50 @@ class Voo{
 			return this->codigo;
 		}
 
+		//Função que retorna a quantidade de tripulantes cadastrados no voo.
 		unsigned int getTQuant(){
 			return this->Tquant;
 		}
 
+		//Função para incrementar em um a quantidade de tripulantes.
 		void OneT(){
 			Tquant++;
 		}
 };
 
+//Classe com as informações de um tripulante
 class Tripulante{
 	private:
-		int codigo;
-		int idade;
-		string nome;
-		string cpf;
+		int codigo; //Código do voo que o tripulante pertence.
+		int idade; //Idade do tripulante.
+		string nome; //Nome do tripulante.
+		string cpf; //CPF do tripulante.
 
 	public:
+		//Contrutor.
 		Tripulante(int codigo, int idade, string nome, string cpf){
-			this->codigo = codigo;
-			this->idade = idade;
-			this->nome = nome;
-			this->cpf = cpf;
+			this->codigo = codigo; //Código da classe recebe codigo (parâmetro).
+			this->idade = idade; //Idade da classe recebe idade (parâmetro).
+			this->nome = nome; //Nome da classe recebe nome (parâmetro).
+			this->cpf = cpf; //CPF da classe recebe cpf (parâmetro).
 		}
 
+		//Função para retornar o código do tripulante.
 		int getTCode(){
 			return this->codigo;
 		}
 
+		//Função para retornar o nome do tripulante.
 		string getTNome(){
 			return this->nome;
 		}
 
+		//Função para retornar a idade do tripulante.
 		int getTIdade(){
 			return this->idade;
 		}
 
+		//Função para retornar o CPF do tripulante.
 		string getTCPF(){
 			return this->cpf;
 		}
@@ -260,7 +268,7 @@ Voo* addVoo(){
 	return voo; //retorna voo,
 }
 
-//Função que pega um voo pelo código dele.
+//Função que retorna um voo com todas os dados preenchidos.
 Voo* getVooByCode(int code, Registros<Voo*> &RegVoos){
 	unsigned int qtvoo = RegVoos.getQuant(); //Variável que recebe a quantidade de voos do vetor RegVoos (parâmetro).
 
@@ -276,21 +284,24 @@ Voo* getVooByCode(int code, Registros<Voo*> &RegVoos){
 	return NULL; //Retorna Vazio.
 }
 
+//Função que retorna um tripulante com todos os dados preenchidos.
 Tripulante* addTripul(Voo* voo, Astronauta* astronauta){
-	int code_t = voo->getCode();
-	int idade_t = astronauta->getIdade();
-	string nome_t = astronauta->getNome();
-	string cpf_t = astronauta->getCPF();
+	int code_t = voo->getCode(); //Código do voo fornecido pelo usuário.
+	int idade_t = astronauta->getIdade(); //Idade do astronauta fornecido pelo usuário.
+	string nome_t = astronauta->getNome(); //Nome do astronauta fornecido pelo usuário.
+	string cpf_t = astronauta->getCPF(); //CPF do astronauta fornecido pelo usuário.
 
-	
+	//Cria um tripulante com as variáveis do início da função.
 	Tripulante* tripul = new Tripulante(code_t, idade_t, nome_t, cpf_t);
-	return tripul;
+	return tripul; //Retorna esse tripulante.
 }
 
+//Função para imprimir na tela os tripulantes de um voo.
 void showTripul(Voo* voo, Registros<Tripulante*> &RegTripul){
-	unsigned int TQuant = voo->getTQuant();
-	int voo_code = voo->getCode();
+	unsigned int TQuant = voo->getTQuant(); //Variável que recebe a quantidade de tripulantes cadastrados em um voo.
+	int voo_code = voo->getCode(); //Variável que recebe o código do voo.
 
+	//Loop para imprimir os tripulantes.
 	for(int i=0;i<TQuant;i++){
 		int TripCode = RegTripul.getE(i)->getTCode();
 		if(TripCode == voo_code){
@@ -303,7 +314,7 @@ void showTripul(Voo* voo, Registros<Tripulante*> &RegTripul){
 		}
 	}
 	cout << "----------------------------------------------" << endl;
-	cout << endl;
+	cout << endl; //Pula linha.
 }
 
 int main(){
@@ -422,23 +433,30 @@ int main(){
 
 			cout << endl; //Pula linha.
 		} else if(ans == 5){ //Caso o comando seja o 5, cadastra um tripulante em um determinado voo.
-			int temp_code;
-			string temp_cpf;
+			int temp_code; //Código temporário.
+			string temp_cpf; //CPF temporário.
 
+			//Coleta o código e armazena na variável temp_code
 			cout << "\n----------------------------------------------" << endl;
 			cout << "Qual o código do voo que será cadastrado um tripulante?" << endl;
 			cin >> temp_code;
+			//Cria uma variável do tipo Voo* que recebe o voo de acordo com o código fornecido pelo usuário.
 			Voo* temp_voo = getVooByCode(temp_code, RegistroVoos);
 
+			//Se houver um voo com o código fornecido.
 			if(temp_voo != NULL){
 				LimparBuffer();
 
+				//Coleta o CPF e armazena na variável temp_cpf.
 				cout << "----------------------------------------------" << endl;
 				cout << "Qual o CPF do astronauta que deseja cadastrar?" << endl;
 				getline(cin, temp_cpf);
+				//Cria uma variável do tipo Astronauta* que recebe o astronauta de acordo com o CPF fornecido pelo usuário.
 				Astronauta* temp_astro = getAstroByCPF(temp_cpf, RegistroAstronautas);
 
+				//Se houver um astronauta com o CPF fornecido.
 				if(temp_astro != NULL){
+					//Imprime a mensagem de que tudo deu certo!
 					cout << "Astronauta "
 						 << temp_astro->getNome()
 						 << " foi cadastrado no voo de código "
@@ -447,15 +465,16 @@ int main(){
 						 << endl;
 
 					cout << "----------------------------------------------" << endl;
+					//Adiciona o tripulante utilizando o voo e o astronauta adquiridos pela coleta das informações e armazena no vetor de tripulantes.
 					RegistroTripulantes.addE(addTripul(temp_voo, temp_astro));
-					temp_voo->OneT();
+					temp_voo->OneT(); //Incrementa em um a quantidade de tripulantes no voo na qual o tripulante foi cadastrado.
 					cout << "----------------------------------------------" << endl;
-				} else{
+				} else{ //Se não houver astronauta com o CPF fornecido, imprime uma mensagem de erro.
 					cout << "\n----------------------------------------------" << endl;
 					cout << "Não há nenhum astronauta com o CPF fornecido." << endl;
 					cout << "----------------------------------------------" << endl;	
 				}
-			} else{
+			} else{ //Se não houver voo com o código fornecido, imprime uma mensagem de erro.
 				cout << "\n----------------------------------------------" << endl;
 				cout << "Não há nenhum voo com o código fornecido." << endl;
 				cout << "----------------------------------------------" << endl;
@@ -478,15 +497,19 @@ int main(){
 			//delTripulante(code, cpf, RegistroVoos, RegistroAstronautas);
 			
 			cout << endl;
-		} else if(ans == 7){
-			int code;
+		} else if(ans == 7){ //Caso o comando seja o 7, mostra os tripulantes cadastrados em um determinado voo.
+			int code; //Variável para o código.
 
+			//Coleta o código e armazena na variável code.
 			cout << "\n----------------------------------------------" << endl;
 			cout << "Qual o código do voo que deseja ver seus tripulantes?" << endl;
 			cin >> code;
+			//Cria uma variável do tipo Voo* que recebe um voo de acordo com o código fornecido pelo usuário.
 			Voo* voo = getVooByCode(code, RegistroVoos);	
 
+			//Se houver um voo com o código fornecido e a quantidade de tripulantes desse voo for maior que 0.
 			if(voo != NULL && voo->getTQuant() > 0){
+				//Chama a função para mostrar os tripulantes.
 				showTripul(voo, RegistroTripulantes);	
 			}
 		}
