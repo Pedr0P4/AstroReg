@@ -331,6 +331,35 @@ void showTripul(Voo* voo, Registros<Tripulante*> &RegTripul){
 	cout << endl; //Pula linha.
 }
 
+//Função para a deleção de um tripulante de um voo.
+void delTripul(Voo* voo, Astronauta* astro, Registros<Tripulante*> &RegTrip){
+	int code_voo = voo->getCode(); //Variável que armazena o código do voo fornecido.
+	string cpf_astro = astro->getCPF(); //Variável que armazena o cpf do astronauta fornecido.
+	unsigned int TQuant = RegTrip.getQuant(); //Variável que armazena a quantidade de tripulantes no vetor de tripulantes.
+	
+	//Loop para verificar se o código do voo e o cpf do astronauta batem com o código do tripulante e o cpf do mesmo.
+	for(int i=0;i<TQuant;i++){
+		int code_trip = RegTrip.getE(i)->getTCode();
+		string cpf_trip = RegTrip.getE(i)->getTCPF();
+
+		if(code_trip == code_voo && cpf_trip == cpf_astro){ //Se achar
+			//Variável do tipo Tripulante* que recebe o elemento que possui o código igual ao do voo fornecido e o cpf igual ao do astronauta fornecido.
+			Tripulante* del_trip = RegTrip.getE(i);
+			//Imprime mensagem de sucesso.
+			cout << "O tripulante " << del_trip->getTNome() 
+				 << " cadastrado no voo " << del_trip->getTCode() 
+				 << " foi removido da tripulação com sucesso!"
+				 << endl;
+			//Função do vetor para remover um elemento.
+			RegTrip.delE(del_trip);
+			return; //retorna
+		}
+	}
+
+	//Mensagem de erro, caso saia do loop ao invés de retornar antes do loop finalizar.
+	cout << "Não há nenhum tripulante nesse voo com o cpf fornecido..." << endl;
+}
+
 int main(){
 	//Criação do vetor de ponteiros de Astronautas.
     Registros<Astronauta*> RegistroAstronautas;
@@ -351,7 +380,7 @@ int main(){
 			 << "4 - Exibir voos.\n"
 			 << "5 - Cadastrar tripulante.\n"
 			 << "6 - Apagar tripulante.\n"
-			 << "7 - Exibir tripulantes cadastrados.\n"
+			 << "7 - Exibir tripulação.\n"
 			 << "0 - Sair.\n"
 			 << "Comando: ";
 		cin >> ans; //Resposta do usuário.
@@ -377,7 +406,7 @@ int main(){
 
 			//Caso não haja elementos no vetor (astronautas), imprime uma mensagem de erro.
 			if(qtastro == 0){
-				cout << "Não há astronautas cadastrados!" << endl;
+				cout << "Não há astronautas cadastrados..." << endl;
 			} else{ //Caso haja elementos no vetor (astronautas).
 
 				string text = RegistroAstronautas.getE(0)->getNome(); //Variável que pegará o nome de cada astronauta.
@@ -435,13 +464,15 @@ int main(){
 			}
 			cout << endl; //Pula linha
 		} else if(ans == 3){ //Caso o comando seja o 3, adiciona um voo no vetor RegistroVoos.
+			//Variável do tipo Voo* que recebe um voo com todos os dados preenchidos.
 			Voo* voo = addVoo(RegistroVoos);
 			
-			if(voo != NULL){
-				RegistroVoos.addE(voo);
-				cout << endl;
-			} else{
-				cout << endl;
+			//Condicional para saber se o voo é válido.
+			if(voo != NULL){ //Se for válido.
+				RegistroVoos.addE(voo); //Adiciona o voo no vetor de voos.
+				cout << endl; //Pula linha.
+			} else{ //Se não for válido
+				cout << endl; //Somente pula a linha.
 			}
 
 		} else if(ans == 4){ //Caso o comando seja o 4, Mostra os voos cadastrados no vetor RegistroVoos.
@@ -457,7 +488,7 @@ int main(){
 						<< endl;
 				}
 			} else{ //Caso não haja, imprime uma mensagem de erro.
-				cout << "Não há voos cadastrados!" << endl;
+				cout << "Não há voos cadastrados..." << endl;
 			}
 
 			cout << endl; //Pula linha.
@@ -491,7 +522,7 @@ int main(){
 						 << temp_astro->getNome()
 						 << " foi cadastrado no voo de código "
 						 << temp_voo->getCode()
-						 << "."
+						 << " com sucesso!"
 						 << endl;
 					//Adiciona o tripulante utilizando o voo e o astronauta adquiridos pela coleta das informações e armazena no vetor de tripulantes.
 					RegistroTripulantes.addE(addTripul(temp_voo, temp_astro));
@@ -499,12 +530,12 @@ int main(){
 					cout << "----------------------------------------------" << endl;
 				} else{ //Se não houver astronauta com o CPF fornecido, imprime uma mensagem de erro.
 					cout << "\n----------------------------------------------" << endl;
-					cout << "Não há nenhum astronauta com o CPF fornecido." << endl;
+					cout << "Não há nenhum astronauta com o CPF fornecido..." << endl;
 					cout << "----------------------------------------------" << endl;	
 				}
 			} else{ //Se não houver voo com o código fornecido, imprime uma mensagem de erro.
 				cout << "\n----------------------------------------------" << endl;
-				cout << "Não há nenhum voo com o código fornecido." << endl;
+				cout << "Não há nenhum voo com o código fornecido..." << endl;
 				cout << "----------------------------------------------" << endl;
 			}
 
@@ -516,13 +547,16 @@ int main(){
 			cout << "\n----------------------------------------------" << endl;
 			cout << "Qual o código do voo que deseja deletar um tripulante? " << endl;
 			cin >> code;
+			Voo* voo = getVooByCode(code, RegistroVoos);
 
 			cout << "----------------------------------------------" << endl;
 			cout << "Qual o CPF do astronauta que deseja remover? " << endl;
 			cin >> cpf;
 			cout << "----------------------------------------------" << endl;
+			Astronauta* astro = getAstroByCPF(cpf, RegistroAstronautas);
 
-			//delTripulante(code, cpf, RegistroVoos, RegistroAstronautas);
+			delTripul(voo, astro, RegistroTripulantes);
+			cout << "----------------------------------------------" << endl;
 			
 			cout << endl;
 		} else if(ans == 7){ //Caso o comando seja o 7, mostra os tripulantes cadastrados em um determinado voo.
