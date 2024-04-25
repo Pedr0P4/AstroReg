@@ -134,18 +134,24 @@ class Voo{
 			return this->Tquant;
 		}
 
+		//Função que retorna se o voo foi lançado ou não.
+		bool getLanc(){
+			return this->lanc;
+		}
+
 		//Função para incrementar em um a quantidade de tripulantes.
 		void OneT(){
 			Tquant++;
 		}
 
+		//Função para decrementar em um a quantidade de tripulantes.
 		void MOneT(){
 			Tquant--;
 		}
 
 		//Setter para a variável lanc da class
 		void setLanc(bool ToF){
-			this->lanc = tof;
+			this->lanc = ToF;
 		}
 };
 
@@ -157,6 +163,7 @@ class Tripulante{
 		string nome; //Nome do tripulante.
 		string cpf; //CPF do tripulante.
 		bool vivo; //Se o tripulante está vivo ou não.
+		bool ocup; //Se o tripulante está ocupado (em um voo já lançado).
 
 	public:
 		//Contrutor.
@@ -166,6 +173,7 @@ class Tripulante{
 			this->nome = nome; //Nome da classe recebe nome (parâmetro).
 			this->cpf = cpf; //CPF da classe recebe cpf (parâmetro).
 			this->vivo = VoM; //vivo da classe recebe VoM (parâmetro), true para vivo e false para morto.
+			this->ocup = false; // ocup da classe começa com false.
 		}
 
 		//Função para retornar o código do tripulante.
@@ -193,9 +201,19 @@ class Tripulante{
 			return this->vivo;
 		}
 
+		//Função para retornar se o tripulante está em um voo lançado ou não.
+		bool getTOcup(){
+			return this->ocup;
+		}
+
 		//Setter para definir se o tripulante está vivo ou não (True - Vivo / False - Morto).
 		void setVivo(bool ToF){
 			this->vivo = ToF;
+		}
+
+		//Setter para definir se o tripulante está em um voo lançado ou não.
+		void setOcup(bool ToF){
+			this->ocup = ToF;
 		}
 
 };
@@ -522,14 +540,24 @@ int main(){
 			unsigned int qtvoo = RegistroVoos.getQuant(); //Variável para a quantidade de voos no vetor.	
 
 			if(qtvoo != 0){ //Caso haja voos no vetor.
-				cout << "Voos:\n" << endl; //Título
+				cout << "----------------------------------------------" << endl;
+				cout << "Voos:" << endl; //Título
 
 				//Loop para imprimir os códigos dos voos.
 				for(int i=0;i<qt_voos;i++){
+					cout << "----------------------------------------------" << endl;
 					cout << "Código do voo " << i+1 << ": "
-						<< RegistroVoos.getE(i)->getCode()
-						<< endl;
+						 << RegistroVoos.getE(i)->getCode()
+						 << endl;
+					cout << "Situação do voo: ";
+					//Se o voo foi lançado.
+					if(RegistroVoos.getE(i)->getLanc()){
+						cout << "Lançado." << endl; //Imprime que foi lançado.
+					} else{ //Caso não tenha sido lançado.
+						cout << "Em planejamento." << endl; //Imprime que está em planejamento.
+					}
 				}
+				cout << "----------------------------------------------" << endl;
 			} else{ //Caso não haja, imprime uma mensagem de erro.
 				cout << "\n----------------------------------------------" << endl;
 				cout << "Não há nenhum voo cadastrado. Cadastre com o comando 3!" << endl;
@@ -554,8 +582,8 @@ int main(){
 				//Cria uma variável do tipo Voo* que recebe o voo de acordo com o código fornecido pelo usuário.
 				Voo* temp_voo = getVooByCode(temp_code, RegistroVoos);
 
-				//Se houver um voo com o código fornecido.
-				if(temp_voo != NULL){
+				//Se houver um voo com o código fornecido e o voo não foi lançado ainda.
+				if(temp_voo != NULL && temp_voo->getLanc() == false){
 					LimparBuffer();
 
 					if(RegistroAstronautas.getQuant() <= 0){
@@ -570,8 +598,8 @@ int main(){
 						//Cria uma variável do tipo Astronauta* que recebe o astronauta de acordo com o CPF fornecido pelo usuário.
 						Astronauta* temp_astro = getAstroByCPF(temp_cpf, RegistroAstronautas);
 
-						//Se houver um astronauta com o CPF fornecido.
-						if(temp_astro != NULL){
+						//Se houver um astronauta com o CPF fornecido e o astronauta está vivo.
+						if(temp_astro != NULL && temp_astro->getVivo()){
 							cout << "----------------------------------------------" << endl;
 							//Imprime a mensagem de que tudo deu certo!
 							cout << "Astronauta "
@@ -584,15 +612,27 @@ int main(){
 							RegistroTripulantes.addE(addTripul(temp_voo, temp_astro));
 							temp_voo->OneT(); //Incrementa em um a quantidade de tripulantes no voo na qual o tripulante foi cadastrado.
 							cout << "----------------------------------------------" << endl;
-						} else{ //Se não houver astronauta com o CPF fornecido, imprime uma mensagem de erro.
+						} else if(temp_astro == NULL){ //Se não houver astronauta com o CPF fornecido, imprime uma mensagem de erro.
+							//Imprime uma mensagem de erro.
 							cout << "\n----------------------------------------------" << endl;
 							cout << "Não há nenhum astronauta com o CPF fornecido..." << endl;
 							cout << "----------------------------------------------" << endl;	
+						} else if(temp_astro->getVivo() == false){ //Se o astronauta estiver morto.
+							//Imprime uma mensagem de erro.
+							cout << "\n----------------------------------------------" << endl;
+							cout << "Não há como adicionar um astronauta morto no voo! Mais respeito por favor." << endl;
+							cout << "----------------------------------------------" << endl;	
 						}
 					}
-				} else{ //Se não houver voo com o código fornecido, imprime uma mensagem de erro.
+				} else if(temp_voo == NULL){ //Se não houver voo com o código fornecido, imprime uma mensagem de erro.
+					//Imprime uma mensagem de erro.
 					cout << "\n----------------------------------------------" << endl;
 					cout << "Não há nenhum voo com o código fornecido..." << endl;
+					cout << "----------------------------------------------" << endl;
+				} else if(temp_voo->getLanc()){ //Se o voo foi lançado.
+					//Imprime uma mensagem de erro.
+					cout << "\n----------------------------------------------" << endl;
+					cout << "Não tem como adicionar tripulantes em um voo já lançado..." << endl;
 					cout << "----------------------------------------------" << endl;
 				}
 
@@ -618,7 +658,7 @@ int main(){
 				Voo* voo = getVooByCode(code, RegistroVoos);
 
 				//Se existir um voo com o código fornecido e a quantidade de tripulantes for maior que 0.
-				if(voo != NULL && voo->getTQuant() > 0){
+				if(voo != NULL && voo->getTQuant() > 0 && voo->getLanc() == false){
 					//Coleta o CPF do astronauta e armazena na variável cpf.
 					cout << "----------------------------------------------" << endl;
 					cout << "Qual o CPF do astronauta que deseja remover? " << endl;
@@ -648,6 +688,11 @@ int main(){
 					//Imprime uma mensagem de erro.
 					cout << "----------------------------------------------" << endl;
 					cout << "Não há nenhum tripulante cadastrado no voo. Cadastre com o comando 5!" << endl;
+					cout << "----------------------------------------------" << endl;
+				} else if(voo->getLanc()){ //Caso o voo já tenha sido lançado.
+					//Imprime uma mensagem de erro.
+					cout << "----------------------------------------------" << endl;
+					cout << "Não dá para remover um tripulante pois o voo já foi lançado." << endl;
 					cout << "----------------------------------------------" << endl;
 				}
 			}
@@ -704,12 +749,24 @@ int main(){
 				Voo* voo = getVooByCode(code, RegistroVoos);
 
 				//Se houver um voo com o código fornecido e a quantidade de tripulantes do voo for maior que 0.
-				if(voo != NULL && voo->getTQuant() > 0){
+				if(voo != NULL && voo->getTQuant() > 0 && voo->getLanc() == false){
 					cout << "----------------------------------------------" << endl;
 					voo->setLanc(true); //Chama o setter da classe voo para setar o lançamento como true.
 					//Imprime mensagem de sucesso.
 					cout << "O voo " << code << " foi lançado! Boa sorte para a tripulação!" << endl;
 					cout << "----------------------------------------------" << endl;
+
+					unsigned int TQuant = RegistroTripulantes.getQuant(); //Variável que armazena a quantidade de tripulantes no total.
+
+					//Loop para setar os tripulantes como "ocupados".
+					for(int i=0;i<TQuant;i++){
+						int trip_code = RegistroTripulantes.getE(i)->getTCode();
+						if(trip_code == code){
+							Tripulante* trip = RegistroTripulantes.getE(i);
+							trip->setOcup(true);
+						}
+					}
+
 				} else if(voo == NULL){ //Caso não haja voo com o código fornecido pelo usuário.
 					//Imprime mensagem de erro.
 					cout << "----------------------------------------------" << endl;
@@ -719,6 +776,11 @@ int main(){
 					//Imprime uma mensagem de erro.
 					cout << "----------------------------------------------" << endl;
 					cout << "Não tem como lançar sem tripulantes. Cadastre um com o comando 5!" << endl;
+					cout << "----------------------------------------------" << endl;
+				} else if(voo->getLanc()){ //Caso o voo já tenha sido lançado.
+					//Imprime uma mensagem de erro.
+					cout << "----------------------------------------------" << endl;
+					cout << "Não tem como lançar um voo que já foi lançado." << endl;
 					cout << "----------------------------------------------" << endl;
 				}
 
