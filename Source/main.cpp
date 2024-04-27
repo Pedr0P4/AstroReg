@@ -127,13 +127,18 @@ class Voo{
 	private:
 		int codigo; //Código do voo
 		unsigned int Tquant; //Quantidade de tripulantes cadastrados.
-		bool lanc = false; //Se o voo foi lançado ou não.
+		bool lanc; //Se o voo foi lançado ou não.
+		bool explode; //Se o voo explodiu ou não.
+		bool finalizado; //Se o voo foi finalizado ou não.
 
 	public:
 		//Construtor
 		Voo(int codigo){
 			this->codigo = codigo; //codigo da classe recebe codigo (parâmetro).
 			this->Tquant = 0; //Quantidade de tripulantes recebe 0.
+			this->lanc = false; //Variável lanc começa recebendo false.
+			this->explode = false; //Variável explode começa recebendo false.
+			this->finalizado = false; //Variável finalizado começa recebendo false.
 		}
 
 		//Função que retorna o código do voo.
@@ -151,6 +156,16 @@ class Voo{
 			return this->lanc;
 		}
 
+		//Função que retorna se o voo explodiu ou não.
+		bool getExplode(){
+			return this->explode;
+		}
+
+		//Função que retorna se o voo foi finalizado ou não.
+		bool getFin(){
+			return this->finalizado;
+		}
+
 		//Função para incrementar em um a quantidade de tripulantes.
 		void OneT(){
 			Tquant++;
@@ -161,9 +176,19 @@ class Voo{
 			Tquant--;
 		}
 
-		//Setter para a variável lanc da class
+		//Setter para a variável lanc da classe (True - Foi lançado / False - Não foi lançado).
 		void setLanc(bool ToF){
 			this->lanc = ToF;
+		}
+
+		//Setter para a variável explode da classe (True - Explodiu / False - Não explodiu).
+		void setExplode(bool ToF){
+			this->explode = ToF;
+		}
+
+		//Setter para a variável finalizade da classe (True - Foi finalizado / False - Não foi finalizado).
+		void setFin(bool ToF){
+			this->finalizado = ToF;
 		}
 };
 
@@ -442,6 +467,52 @@ void delTripul(Voo* voo, Astronauta* astro, Registros<Tripulante*> &RegTrip){
 	cout << "Não há nenhum tripulante nesse voo com o cpf fornecido..." << endl;
 }
 
+void limpezaGeral(Registros<Voo*> &RegVoos, Registros<Astronauta*> &RegAstro, Registros<Tripulante*> &RegTrip){
+	unsigned int AQuant = RegAstro.getQuant();
+	unsigned int TQuant = RegTrip.getQuant();
+
+	for(int i=0;i<AQuant;i++){
+		Astronauta* astro = RegAstro.getE(i);
+		if(astro->getVivo() == false){
+			for(int j=0;j<TQuant;j++){
+				Tripulante* trip = RegTrip.getE(j);
+				if(trip->getTCPF() == astro->getCPF()){
+					trip->setVivo(false);
+				}
+			}
+		}
+	}
+}
+
+void explodeVoo(Voo* voo, Registros<Tripulante*> &RegTrip, Registros<Astronauta*> &RegAst){
+	voo->setExplode(true);
+	cout << "O voo " << voo->getCode() << " sofreu um acidente e acabou explodindo!" << endl;
+	cout << "----------------------------------------------" << endl;
+	cout << "Tripulação: " << endl;
+
+	unsigned int TQuant = RegTrip.getQuant();
+	for(int i=0;i<TQuant;i++){
+		Tripulante* trip = RegTrip.getE(i);
+		int code_trip = trip->getTCode();
+		string cpf_trip = trip->getTCPF();
+
+		if(voo->getCode() == code_trip){
+			trip->setVivo(false);
+			Astronauta* astro = getAstroByCPF(cpf_trip, RegAst);
+			astro->setVivo(false);
+			astro->setOcup(false);
+
+			cout << "Astronauta: " << trip->getTNome()
+				 << " [ " << formatCPF(trip->getTCPF())
+				 << " ]." << endl;
+		}
+	}
+
+	cout << "----------------------------------------------" << endl;
+	cout << "Nossos sentimentos à todos os entes queridos da tripulação..." << endl;
+	cout << "----------------------------------------------" << endl;
+}
+
 int main(){
 	//Criação do vetor de ponteiros de Astronautas.
     Registros<Astronauta*> RegistroAstronautas;
@@ -463,7 +534,8 @@ int main(){
 			 << "5 - Cadastrar tripulante.\n"
 			 << "6 - Apagar tripulante.\n"
 			 << "7 - Exibir tripulação.\n"
-			 << "8 - Lançar um voo\n"
+			 << "8 - Lançar um voo.\n"
+			 << "9 - Explodir voo.\n"
 			 << "0 - Sair.\n"
 			 << "Comando: ";
 		cin >> ans; //Resposta do usuário.
@@ -886,6 +958,20 @@ int main(){
 				}
 
 				cout << endl; //Pula linha.
+			}
+		} else if(ans == 9){
+			int code;
+
+			cout << "\n----------------------------------------------" << endl;
+			cout << "Qual o código do voo que deseja EXPLODIR?" << endl;
+			cin >> code;
+
+			Voo* voo = getVooByCode(code, RegistroVoos);
+
+			if(voo != NULL && voo->getLanc() && voo->getExplode() == false){
+				cout << "----------------------------------------------" << endl;
+				explodeVoo(voo, RegistroTripulantes, RegistroAstronautas);
+				limpezaGeral(RegistroVoos, RegistroAstronautas, RegistroTripulantes);
 			}
 		}
 	}
