@@ -218,21 +218,25 @@ class Tripulante{
 
 };
 
+//Função para padronizar os CPF's.
 string confCPF(string cpf){
-	unsigned int tamanho_string = cpf.length();
-	string novo_cpf = "00000000000";
+	unsigned int tamanho_string = cpf.length(); //Variável que armazena o tamanho do cpf do parâmetro.
+	string novo_cpf = "00000000000"; //Variável que armazena uma sequência de 0's do tamanho de um cpf padrão.
 
+	//Se o tamanho do cpf do parâmetro for menor ou igual a 11.
 	if(tamanho_string <= 11){
+		//Loop que repete tamanho_string vezes.
 		for(int i=0;i<tamanho_string;i++){
-			novo_cpf[i] = cpf[i];
+			novo_cpf[i] = cpf[i]; //Novo_cpf na posição i recebe o número da posição i do cpf do parâmetro.
 		}
-	} else{
+	} else{ //Caso contrário.
+		//Loop que repete 11 vezes (tamanho padrão de um CPF).
 		for(int i=0;i<11;i++){
-			novo_cpf[i] = cpf[i];
+			novo_cpf[i] = cpf[i]; //Novo_cpf na posição i recebe o número da posição i do cpf do parâmetro.
 		}
 	}
-	
-	return novo_cpf;
+
+	return novo_cpf; //Retorna novo_cpf
 }
 
 char* formatCPF(string cpf){
@@ -621,20 +625,24 @@ int main(){
 						if(temp_astro != NULL && temp_astro->getVivo()){
 							cout << "----------------------------------------------" << endl;
 
-							bool check = true;
-							unsigned int TQuant = RegistroTripulantes.getQuant();
+							bool check = true; //Variável para checar.
+							unsigned int TQuant = RegistroTripulantes.getQuant(); //Variável da quantidade de tripulantes total.
+							//Loop para verificar os tripulantes.
 							for(int i=0;i<TQuant;i++){
-								string cpf_trip = RegistroTripulantes.getE(i)->getTCPF();
-								int code_trip = RegistroTripulantes.getE(i)->getTCode();
+								string cpf_trip = RegistroTripulantes.getE(i)->getTCPF(); //Variável que recebe o cpf do tripulante i.
+								int code_trip = RegistroTripulantes.getE(i)->getTCode(); //Variável que recebe o código do tripulante i.
+								//Se código do tripulante for igual ao código fornecido pelo usuário e o cpf do tripulante for igual ao cpf fornecido pelo usuário.
 								if(code_trip == temp_code && temp_cpf == cpf_trip){
+									//Imprime uma mensagem de erro.
 									cout << "O astronauta de CPF " << formatCPF(temp_cpf)
 										 << " já está cadastrado no voo." << endl;
 									cout << "----------------------------------------------" << endl;
-									check = false;
-									break;
+									check = false; //check recebe false.
+									break; //Para o loop.
 								}
 							}
 
+							//Se o check for true.
 							if(check){
 								//Imprime a mensagem de que tudo deu certo!
 								cout << "Astronauta "
@@ -790,44 +798,54 @@ int main(){
 					unsigned int TQuant = RegistroTripulantes.getQuant(); //Variável que armazena a quantidade de tripulantes no total.
 					bool check = true;
 
+					//Loop para verificar cada tripulante.
 					for(int i=0;i<TQuant;i++){
-						Tripulante* trip = RegistroTripulantes.getE(i);
-						int TCode = trip->getTCode();
-						string Tcpf = trip->getTCPF();
-						Astronauta* astro = getAstroByCPF(Tcpf, RegistroAstronautas);
+						Tripulante* trip = RegistroTripulantes.getE(i); //Variável do tipo Tripulante* que recebe o elemento i.
+						int TCode = trip->getTCode(); //Variável que recebe o código do tripulante.
+						string Tcpf = trip->getTCPF(); //Variável que recebe o cpf do tripulante.
+						Astronauta* astro = getAstroByCPF(Tcpf, RegistroAstronautas); //Variável do tipo Astronauta* que recebe o astronauta de acordo com o CPF do tripulante.
 
+						//Se o código do voo for igual ao código do tripulante e o astronauta estiver ocupado.
 						if(voo->getCode() == TCode && astro->getOcup()){
-							check = false;
-							break;
+							check = false; //check recebe falso.
+							break; //Para o loop.
 						}
 					}
 
+					//Se check for falso.
 					if(check == false){
+						//Impressão dos dados do astronauta ocupado.
 						cout << "----------------------------------------------" << endl;
 						cout << "Os seguintes astronautas já estão em um voo:"<< endl;
 
+						//Loop para imprimir os dados do astronauta ocupado.
 						for(int i=0;i<TQuant;i++){
-							Tripulante* trip = RegistroTripulantes.getE(i);
-							int TCode = trip->getTCode();
-							string Tcpf = trip->getTCPF();
-							Astronauta* astro = getAstroByCPF(Tcpf, RegistroAstronautas);
+							Tripulante* trip = RegistroTripulantes.getE(i); //Variável do tipo Tripulante* que recebe o elemento i.
+							int TCode = trip->getTCode(); //Variável que recebe o código do tripulante.
+							string Tcpf = trip->getTCPF(); //Variável que recebe o cpf do tripulante.
+							Astronauta* astro = getAstroByCPF(Tcpf, RegistroAstronautas); //Variável do tipo Astronauta* que recebe o astronauta de acordo com o CPF do tripulante.
 
+							//Se o código do voo for igual ao código do tripulante e o astronauta estiver ocupado.
 							if(voo->getCode() == TCode && astro->getOcup()){
+								//Imprime os dados do astronauta.
 								cout << "Astronauta " << astro->getNome()
 									 << " de CPF: " << formatCPF(astro->getCPF())
 									 << endl;
 								cout << "Cadastrado no(s) voo(s): " << endl;
+								//Loop para imprimir os voos na qual o astronauta ocupado pertence.
 								for(int j=0;j<TQuant;j++){
-									Tripulante* trip2 = RegistroTripulantes.getE(j);
-									string Tcpf2 = trip2->getTCPF();
+									Tripulante* trip2 = RegistroTripulantes.getE(j); //Variável do tipo Tripulante* que recebe o elemento j.
+									string Tcpf2 = trip2->getTCPF(); //Variável que recebe o código do tripulante (trip2).
 
+									//Se o cpf do astronauta for igual ao cpf do trip2 e o código do trip2 for diferente do código do voo do tripulante 1.
 									if(astro->getCPF() == trip2->getTCPF() && trip2->getTCode() != TCode){
-										cout << "Voo " << trip2->getTCode() << endl;
+										cout << "Voo " << trip2->getTCode() << endl; //Impressão do dado do voo.
 									}
 								}
 							}
 						}
 
+						//Recomendação para o usuário.
 						cout << "Espere o voo finalizar para que o(s) astronauta(s) esteja(m) livre(s)!" << endl;
 						cout << "----------------------------------------------" << endl;
 
