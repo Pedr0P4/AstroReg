@@ -74,6 +74,7 @@ class Astronauta{
 		bool vivo; //Se ele está vivo.
         string cpf; //CPF do astronauta.
         string nome; //Nome do astronauta.
+		bool ocup; //Se o astronauta está em voo ou não.	
 
     public:
 		//Construtor.
@@ -82,6 +83,7 @@ class Astronauta{
 			this->vivo = true; //vivo recebe true (NÃO é parâmetro).
 			this->cpf = cpf; //cpf da classe recebe cpf (parâmetro).
 			this->nome = nome; //nome da classe recebe nome (parâmetro).
+			this->ocup = false; //ocup da classe recebe false.
 		}
 
 		//Função que retorna o valor da variável idade da classe.
@@ -104,9 +106,19 @@ class Astronauta{
 			return this->nome;
 		}
 
+		//Função que retorna o conteúdo da variável ocup da classe.
+		bool getOcup(){
+			return this->ocup;
+		}
+
 		//Setter para definir se o astronauta está vivo ou não (True - Vivo / False - Morto);
 		void setVivo(bool ToF){
 			this->vivo = ToF;
+		}
+
+		//Setter para definir se o astronauta está ocupado em um voo.
+		void setOcup(bool ToF){
+			this->ocup = ToF;
 		}
 };
 
@@ -163,7 +175,6 @@ class Tripulante{
 		string nome; //Nome do tripulante.
 		string cpf; //CPF do tripulante.
 		bool vivo; //Se o tripulante está vivo ou não.
-		bool ocup; //Se o tripulante está ocupado (em um voo já lançado).
 
 	public:
 		//Contrutor.
@@ -173,7 +184,6 @@ class Tripulante{
 			this->nome = nome; //Nome da classe recebe nome (parâmetro).
 			this->cpf = cpf; //CPF da classe recebe cpf (parâmetro).
 			this->vivo = VoM; //vivo da classe recebe VoM (parâmetro), true para vivo e false para morto.
-			this->ocup = false; // ocup da classe começa com false.
 		}
 
 		//Função para retornar o código do tripulante.
@@ -201,19 +211,9 @@ class Tripulante{
 			return this->vivo;
 		}
 
-		//Função para retornar se o tripulante está em um voo lançado ou não.
-		bool getTOcup(){
-			return this->ocup;
-		}
-
 		//Setter para definir se o tripulante está vivo ou não (True - Vivo / False - Morto).
 		void setVivo(bool ToF){
 			this->vivo = ToF;
-		}
-
-		//Setter para definir se o tripulante está em um voo lançado ou não.
-		void setOcup(bool ToF){
-			this->ocup = ToF;
 		}
 
 };
@@ -750,20 +750,66 @@ int main(){
 
 				//Se houver um voo com o código fornecido e a quantidade de tripulantes do voo for maior que 0.
 				if(voo != NULL && voo->getTQuant() > 0 && voo->getLanc() == false){
-					cout << "----------------------------------------------" << endl;
-					voo->setLanc(true); //Chama o setter da classe voo para setar o lançamento como true.
-					//Imprime mensagem de sucesso.
-					cout << "O voo " << code << " foi lançado! Boa sorte para a tripulação!" << endl;
-					cout << "----------------------------------------------" << endl;
-
 					unsigned int TQuant = RegistroTripulantes.getQuant(); //Variável que armazena a quantidade de tripulantes no total.
+					bool check = true;
 
-					//Loop para setar os tripulantes como "ocupados".
 					for(int i=0;i<TQuant;i++){
-						int trip_code = RegistroTripulantes.getE(i)->getTCode();
-						if(trip_code == code){
+						Tripulante* trip = RegistroTripulantes.getE(i);
+						int TCode = trip->getTCode();
+						string Tcpf = trip->getTCPF();
+						Astronauta* astro = getAstroByCPF(Tcpf, RegistroAstronautas);
+
+						if(voo->getCode() == TCode && astro->getOcup()){
+							check = false;
+							break;
+						}
+					}
+
+					if(check == false){
+						cout << "----------------------------------------------" << endl;
+						cout << "Os seguintes astronautas já estão em um voo:"<< endl;
+
+						for(int i=0;i<TQuant;i++){
 							Tripulante* trip = RegistroTripulantes.getE(i);
-							trip->setOcup(true);
+							int TCode = trip->getTCode();
+							string Tcpf = trip->getTCPF();
+							Astronauta* astro = getAstroByCPF(Tcpf, RegistroAstronautas);
+
+							if(voo->getCode() == TCode && astro->getOcup()){
+								cout << "Astronauta " << astro->getNome()
+									 << " de CPF: " << formatCPF(astro->getCPF())
+									 << endl;
+								cout << "Cadastrado no(s) voo(s): " << endl;
+								for(int j=0;j<TQuant;j++){
+									Tripulante* trip2 = RegistroTripulantes.getE(j);
+									string Tcpf2 = trip2->getTCPF();
+
+									if(astro->getCPF() == trip2->getTCPF() && trip2->getTCode() != TCode){
+										cout << "Voo " << trip2->getTCode() << endl;
+									}
+								}
+							}
+						}
+
+						cout << "Espere o voo finalizar para que o(s) astronauta(s) esteja(m) livre(s)!" << endl;
+						cout << "----------------------------------------------" << endl;
+
+					} else{
+						cout << "----------------------------------------------" << endl;
+						voo->setLanc(true); //Chama o setter da classe voo para setar o lançamento como true.
+						//Imprime mensagem de sucesso.
+						cout << "O voo " << code << " foi lançado! Boa sorte para a tripulação!" << endl;
+						cout << "----------------------------------------------" << endl;
+
+						//Loop para setar os tripulantes como "ocupados".
+						for(int i=0;i<TQuant;i++){
+							Tripulante* trip = RegistroTripulantes.getE(i);
+							if(trip->getTCode() == code){
+								string trip_cpf = trip->getTCPF();
+								Astronauta* astro = getAstroByCPF(trip_cpf, RegistroAstronautas);
+
+								astro->setOcup(true);
+							}
 						}
 					}
 
