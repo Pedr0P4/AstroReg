@@ -1057,35 +1057,89 @@ int main(){
 		} else if(ans == 9){
 			int code;
 
-			cout << "\n----------------------------------------------" << endl;
-			cout << "Qual o código do voo que deseja EXPLODIR?" << endl;
-			cin >> code;
-
-			Voo* voo = getVooByCode(code, RegistroVoos);
-
-			if(voo != NULL && voo->getLanc() && voo->getExplode() == false && voo->getFin() == false){
+			if(RegistroVoos.getQuant() <= 0){
+				cout << "\n----------------------------------------------" << endl;
+				cout << "Não há nenhum voo cadastrado. Cadastre com o comando 3!" << endl;
 				cout << "----------------------------------------------" << endl;
-				explodeVoo(voo, RegistroTripulantes, RegistroAstronautas, RegistroMortos);
-				limpezaGeral(RegistroVoos, RegistroAstronautas, RegistroTripulantes);
-			}
+				cout << endl;
+			} else{
+				cout << "\n----------------------------------------------" << endl;
+				cout << "Qual o código do voo que deseja EXPLODIR?" << endl;
+				cin >> code;
 
-			cout << endl;
+				Voo* voo = getVooByCode(code, RegistroVoos);
+
+				if(voo != NULL && voo->getLanc() && voo->getExplode() == false && voo->getFin() == false){
+					cout << "----------------------------------------------" << endl;
+					explodeVoo(voo, RegistroTripulantes, RegistroAstronautas, RegistroMortos);
+					limpezaGeral(RegistroVoos, RegistroAstronautas, RegistroTripulantes);
+				} else if(voo == NULL){ //Caso não tenha nenhum voo com o código fornecido.
+					//Imprime mensagem de erro.
+					cout << "----------------------------------------------" << endl;
+					cout << "Não há nenhum voo com o código fornecido..." << endl;
+					cout << "----------------------------------------------" << endl;
+				} else if(voo->getLanc() == false){ //Caso o voo ainda não tenha sido lançado.
+					//Imprime mensagem de erro.
+					cout << "----------------------------------------------" << endl;
+					cout << "Não tem como explodir um voo que ainda não foi lançado." << endl;
+					cout << "----------------------------------------------" << endl;
+				} else if(voo->getExplode()){ //Caso o voo já tenha explodido.
+					//Imprime mensagem de erro.
+					cout << "----------------------------------------------" << endl;
+					cout << "Não tem como explodir um voo que já explodiu." << endl;
+					cout << "----------------------------------------------" << endl;
+				} else if(voo->getFin()){ //Caso o voo já tenha finalizado.
+					//Imprime mensagem de erro.
+					cout << "----------------------------------------------" << endl;
+					cout << "Não tem como explodir um voo que já foi finalizado." << endl;
+					cout << "----------------------------------------------" << endl;
+				}
+
+				cout << endl;
+			}
 		} else if(ans == 10){
 			int code;
 
-			cout << "\n----------------------------------------------" << endl;
-			cout << "Qual o código do voo que deseja finalizar?" << endl;
-			cin >> code;
-
-			Voo* voo = getVooByCode(code, RegistroVoos);
-
-			if(voo != NULL && voo->getLanc() && voo->getExplode() == false && voo->getFin() == false){
+			if(RegistroVoos.getQuant() <= 0){
+				cout << "\n----------------------------------------------" << endl;
+				cout << "Não há nenhum voo cadastrado. Cadastre com o comando 3!" << endl;
 				cout << "----------------------------------------------" << endl;
-				finalVoo(voo, RegistroTripulantes, RegistroAstronautas);
-				cout << "----------------------------------------------" << endl;
+				cout << endl;
+			} else{
+				cout << "\n----------------------------------------------" << endl;
+				cout << "Qual o código do voo que deseja finalizar?" << endl;
+				cin >> code;
+
+				Voo* voo = getVooByCode(code, RegistroVoos);
+
+				if(voo != NULL && voo->getLanc() && voo->getExplode() == false && voo->getFin() == false){
+					cout << "----------------------------------------------" << endl;
+					finalVoo(voo, RegistroTripulantes, RegistroAstronautas);
+					cout << "----------------------------------------------" << endl;
+				} else if(voo == NULL){ //Caso não tenha nenhum voo com o código fornecido.
+					//Imprime mensagem de erro.
+					cout << "----------------------------------------------" << endl;
+					cout << "Não há nenhum voo com o código fornecido..." << endl;
+					cout << "----------------------------------------------" << endl;
+				} else if(voo->getLanc() == false){ //Caso o voo ainda não tenha sido lançado.
+					//Imprime mensagem de erro.
+					cout << "----------------------------------------------" << endl;
+					cout << "Não tem como finalizar um voo que ainda não foi lançado." << endl;
+					cout << "----------------------------------------------" << endl;
+				} else if(voo->getExplode()){ //Caso o voo já tenha explodido.
+					//Imprime mensagem de erro.
+					cout << "----------------------------------------------" << endl;
+					cout << "Não tem como finalizar um voo explodiu." << endl;
+					cout << "----------------------------------------------" << endl;
+				} else if(voo->getFin()){ //Caso o voo já tenha finalizado.
+					//Imprime mensagem de erro.
+					cout << "----------------------------------------------" << endl;
+					cout << "Não tem como finalizar um voo que já foi finalizado." << endl;
+					cout << "----------------------------------------------" << endl;
+				}
+
+				cout << endl;
 			}
-
-			cout << endl;
 		}
 	}
 
