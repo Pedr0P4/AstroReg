@@ -573,6 +573,31 @@ void finalVoo(Voo* voo, Registros<Tripulante*> &RegTrip, Registros<Astronauta*> 
 	}
 }
 
+void showMortos(Registros<Morto*> &RegMortos, Registros<Tripulante*> &RegTrip, Registros<Voo*> &RegVoos){
+	unsigned int MQuant = RegMortos.getQuant();
+	unsigned int TQuant = RegTrip.getQuant();
+
+	cout << "EM MEMÓRIA DAQUELES QUE JÁ FORAM:" << endl;
+	cout << "----------------------------------------------" << endl;
+
+	for(int i=0;i<MQuant;i++){
+		Morto* morto = RegMortos.getE(i);
+		cout << "Nome: " << morto->getMNome() << endl;
+		cout << "CPF: " << formatCPF(morto->getMCPF()) << endl;
+		cout << "Idade: " << morto->getMIdade() << endl;
+		cout << "Voos que participou:" << endl;
+		
+		for(int j=0;j<TQuant;j++){
+			Tripulante* trip = RegTrip.getE(j);
+			Voo* voo = getVooByCode(trip->getTCode(), RegVoos);
+			if(trip->getTCPF() == morto->getMCPF() && voo->getLanc() == false && voo->getFin() || voo->getExplode()){
+				cout << "- Voo " << voo->getCode() << endl;
+			}
+		}
+		cout << "----------------------------------------------" << endl;
+	}
+}
+
 int main(){
 	//Criação do vetor de ponteiros de Astronautas.
     Registros<Astronauta*> RegistroAstronautas;
@@ -599,6 +624,7 @@ int main(){
 			 << "8 - Lançar um voo.\n"
 			 << "9 - Explodir um voo.\n"
 			 << "10 - Finalizar um voo.\n"
+			 << "11 - Exibit astronautas mortos.\n"
 			 << "0 - Sair.\n"
 			 << "Comando: ";
 		cin >> ans; //Resposta do usuário.
@@ -1140,6 +1166,14 @@ int main(){
 
 				cout << endl;
 			}
+		} else if(ans == 11){
+			if(RegistroMortos.getQuant() <= 0){
+				cout << "\nNão há mortos." << endl;
+			} else{
+				showMortos(RegistroMortos, RegistroTripulantes, RegistroVoos);
+			}
+
+			cout << endl;
 		}
 	}
 
