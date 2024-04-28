@@ -734,10 +734,17 @@ int main(){
 						 << RegistroVoos.getE(i)->getCode()
 						 << endl;
 					cout << "Situação do voo: ";
+
+					Voo* voo = RegistroVoos.getE(i);
+
 					//Se o voo foi lançado.
-					if(RegistroVoos.getE(i)->getLanc()){
+					if(voo->getLanc()){
 						cout << "Lançado." << endl; //Imprime que foi lançado.
-					} else{ //Caso não tenha sido lançado.
+					} else if(voo->getExplode()){ //Caso tenha explodido.
+						cout << "Explodiu." << endl; //Imprime que explodiu.
+					} else if(voo->getFin()){ //Caso tenha sido finalizado.
+						cout << "Finalizado." << endl; //Imprime que finalizou.
+					} else{ //Caso não seja nenhum dos casos.
 						cout << "Em planejamento." << endl; //Imprime que está em planejamento.
 					}
 				}
@@ -779,8 +786,11 @@ int main(){
 						cout << "----------------------------------------------" << endl;
 						cout << "Qual o CPF do astronauta que deseja cadastrar?" << endl;
 						getline(cin, temp_cpf);
+
+						string conf_cpf = confCPF(temp_cpf); //Bota o cpf na configuração padrão.
+
 						//Cria uma variável do tipo Astronauta* que recebe o astronauta de acordo com o CPF fornecido pelo usuário.
-						Astronauta* temp_astro = getAstroByCPF(temp_cpf, RegistroAstronautas);
+						Astronauta* temp_astro = getAstroByCPF(conf_cpf, RegistroAstronautas);
 
 						//Se houver um astronauta com o CPF fornecido e o astronauta está vivo.
 						if(temp_astro != NULL && temp_astro->getVivo()){
@@ -874,13 +884,17 @@ int main(){
 
 				//Se existir um voo com o código fornecido e a quantidade de tripulantes for maior que 0.
 				if(voo != NULL && voo->getTQuant() > 0 && voo->getLanc() == false && voo->getFin() == false && voo->getExplode() == false){
+					LimparBuffer();
 					//Coleta o CPF do astronauta e armazena na variável cpf.
 					cout << "----------------------------------------------" << endl;
 					cout << "Qual o CPF do astronauta que deseja remover? " << endl;
-					cin >> cpf;
+					getline(cin, cpf);
 					cout << "----------------------------------------------" << endl;
+
+					string conf_cpf = confCPF(cpf); //Bota o cpf na configuração padrão.
+
 					//Variável do tipo Astronauta* que recebe o astronauta de acordo com o CPF fornecido pelo usuário.
-					Astronauta* astro = getAstroByCPF(cpf, RegistroAstronautas);
+					Astronauta* astro = getAstroByCPF(conf_cpf, RegistroAstronautas);
 
 					//Se existir um astronauta com o cpf fornecido.
 					if(astro != NULL){
@@ -1104,11 +1118,6 @@ int main(){
 					cout << "----------------------------------------------" << endl;
 					cout << "Não há nenhum voo com o código fornecido..." << endl;
 					cout << "----------------------------------------------" << endl;
-				} else if(voo->getLanc() == false){ //Caso o voo ainda não tenha sido lançado.
-					//Imprime mensagem de erro.
-					cout << "----------------------------------------------" << endl;
-					cout << "Não tem como explodir um voo que ainda não foi lançado." << endl;
-					cout << "----------------------------------------------" << endl;
 				} else if(voo->getExplode()){ //Caso o voo já tenha explodido.
 					//Imprime mensagem de erro.
 					cout << "----------------------------------------------" << endl;
@@ -1118,6 +1127,11 @@ int main(){
 					//Imprime mensagem de erro.
 					cout << "----------------------------------------------" << endl;
 					cout << "Não tem como explodir um voo que já foi finalizado." << endl;
+					cout << "----------------------------------------------" << endl;
+				} else if(voo->getLanc() == false){ //Caso o voo ainda não tenha sido lançado.
+					//Imprime mensagem de erro.
+					cout << "----------------------------------------------" << endl;
+					cout << "Não tem como explodir um voo que ainda não foi lançado." << endl;
 					cout << "----------------------------------------------" << endl;
 				}
 
@@ -1147,20 +1161,20 @@ int main(){
 					cout << "----------------------------------------------" << endl;
 					cout << "Não há nenhum voo com o código fornecido..." << endl;
 					cout << "----------------------------------------------" << endl;
-				} else if(voo->getLanc() == false){ //Caso o voo ainda não tenha sido lançado.
-					//Imprime mensagem de erro.
-					cout << "----------------------------------------------" << endl;
-					cout << "Não tem como finalizar um voo que ainda não foi lançado." << endl;
-					cout << "----------------------------------------------" << endl;
 				} else if(voo->getExplode()){ //Caso o voo já tenha explodido.
 					//Imprime mensagem de erro.
 					cout << "----------------------------------------------" << endl;
-					cout << "Não tem como finalizar um voo explodiu." << endl;
+					cout << "Não tem como finalizar um voo que explodiu." << endl;
 					cout << "----------------------------------------------" << endl;
 				} else if(voo->getFin()){ //Caso o voo já tenha finalizado.
 					//Imprime mensagem de erro.
 					cout << "----------------------------------------------" << endl;
 					cout << "Não tem como finalizar um voo que já foi finalizado." << endl;
+					cout << "----------------------------------------------" << endl;
+				} else if(voo->getLanc() == false){ //Caso o voo ainda não tenha sido lançado.
+					//Imprime mensagem de erro.
+					cout << "----------------------------------------------" << endl;
+					cout << "Não tem como finalizar um voo que ainda não foi lançado." << endl;
 					cout << "----------------------------------------------" << endl;
 				}
 
