@@ -2,70 +2,9 @@
 #include <iomanip> //Formatação do cout.
 #include <limits> //Para a função de limpar o buffer.
 #include <string> //Biblioteca para manipulação de strings.
+#include "reg.hpp"
 
 using namespace std;
-
-//Classe para armazenar elementos de qualquer tipo (nesse caso do tipo "Astronauta").
-template <typename T> class Registros{
-    private:
-        unsigned int quant; //Variável de quantidade de elementos.
-        T* elements; //Variável para os elementos.
-    
-    public:
-		//Construtor.
-        Registros(){
-            this->quant = 0; //A classe começa com 0 em quant.
-            this->elements = new T[0]; //A classe começa com um ponteiro de um array com 0 elementos.
-        }
-
-		//Função para adicionar elementos.
-        void addE(T elem){
-            T* novoArray = new T[quant+1]; //Criação de um ponteiro para um array do tamanho da quantidade de elementos atuais +1.
-
-            for(int i=0;i<this->quant;i++){
-                novoArray[i] = this->elements[i]; //Copia todos os elementos de elements da classe para esse novo array.
-            }
-
-            novoArray[this->quant] = elem; //No fim do array adiciona o elemento novo. 
-
-            delete[] this->elements; //Deleta o ponteiro dos elementos da classe.
-            this->elements = novoArray; //Os elementos da classe agora recebem o novo array com o novo elemento e os anteriores.
-
-            this->quant++; //Quantidade de elementos é incrementado em 1.
-        }
-
-		//Função para deletar elementos.
-		void delE(T elem){
-			T* novoArray = new T[quant-1]; //Criação de um ponteiro para um array do tamanho da quantidade de elementos atuais -1.
-			unsigned int j = 0; //Variável para manipular as posições do array.
-
-			for(int i=0;i<this->quant;i++){
-				if(elem != elements[i]){ //Se o elemento fornecido pelo usuário for diferente do elemento de posição i do vetor.
-					novoArray[j++] = this->elements[i]; //O valor do elemento é copiado para o array criado no início da função.
-				}
-			}
-
-			delete[] this->elements; //Deleta o array de elementos da classe.
-			this->elements = novoArray; //O array de elementos da classe recebe o array criado no início da função.
-
-			this->quant--; //Quantidade de elementos diminui em 1.
-		}
-
-		//Função para mostrar o elemento na posição recebida no parâmetro (pos).
-		T getE(unsigned int pos){
-			return this->elements[pos];
-		}
-
-		//Função para retornar o valor da quantidade de elementos.
-		int getQuant(){
-			return this->quant;
-		}
-
-		//Destrutor.
-		~Registros(){
-			delete[] elements;
-		}
-};
 
 //Classe com as informações de um astronauta.
 class Astronauta{
@@ -625,7 +564,6 @@ int main(){
 			 << "9 - Explodir um voo.\n"
 			 << "10 - Finalizar um voo.\n"
 			 << "11 - Exibir astronautas mortos.\n"
-			 << "12 - Deletar mortos de um voo.\n"
 			 << "0 - Sair.\n"
 			 << "Comando: ";
 		cin >> ans; //Resposta do usuário.
