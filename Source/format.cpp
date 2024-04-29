@@ -1,7 +1,15 @@
 #include "format.hpp"
 #include <string>
+#include <iostream>
+#include <limits>
 
 using namespace std;
+
+//Função que limpa o buffer.
+void LimparBuffer(){
+	//Limpar o buffer.
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
 
 //Função para padronizar os CPF's.
 string confCPF(string cpf){

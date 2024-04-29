@@ -4,6 +4,8 @@
 #include <string>
 using namespace std;
 
+void LimparBuffer();
+
 string confCPF(string cpf);
 
 char* formatCPF(string cpf);

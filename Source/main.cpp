@@ -1,66 +1,11 @@
 #include <iostream> //Biblioteca de entrada e saída (cout e cin).
 #include <iomanip> //Formatação do cout.
-#include <limits> //Para a função de limpar o buffer.
 #include <string> //Biblioteca para manipulação de strings.
 #include "reg.hpp"
 #include "format.hpp"
+#include "astro.hpp"
 
 using namespace std;
-
-//Classe com as informações de um astronauta.
-class Astronauta{
-    private:
-        int idade; //Idade do astronauta.
-		bool vivo; //Se ele está vivo.
-        string cpf; //CPF do astronauta.
-        string nome; //Nome do astronauta.
-		bool ocup; //Se o astronauta está em voo ou não.	
-
-    public:
-		//Construtor.
-    	Astronauta(int idade, string cpf, string nome){
-			this->idade = idade; //idade da classe recebe idade (parâmetro).
-			this->vivo = true; //vivo recebe true (NÃO é parâmetro).
-			this->cpf = cpf; //cpf da classe recebe cpf (parâmetro).
-			this->nome = nome; //nome da classe recebe nome (parâmetro).
-			this->ocup = false; //ocup da classe recebe false.
-		}
-
-		//Função que retorna o valor da variável idade da classe.
-		int getIdade(){
-			return this->idade;
-		}
-
-		//Função que retorna se está vivo ou não.
-		bool getVivo(){
-			return this->vivo;
-		}
-
-		//Função que retorna o conteúdo da variável cpf da classe.
-		string getCPF(){
-			return this->cpf;
-		}
-
-		//Função que retorna o conteúdo da variável nome da classe.
-		string getNome(){
-			return this->nome;
-		}
-
-		//Função que retorna o conteúdo da variável ocup da classe.
-		bool getOcup(){
-			return this->ocup;
-		}
-
-		//Setter para definir se o astronauta está vivo ou não (True - Vivo / False - Morto);
-		void setVivo(bool ToF){
-			this->vivo = ToF;
-		}
-
-		//Setter para definir se o astronauta está ocupado em um voo.
-		void setOcup(bool ToF){
-			this->ocup = ToF;
-		}
-};
 
 //Classe com as informações de um voo.
 class Voo{
@@ -208,66 +153,6 @@ class Morto{
 			return this->idade;
 		}
 };
-
-//Função que limpa o buffer.
-void LimparBuffer(){
-	//Limpar o buffer.
-	cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
-
-//Função que pega um astronauta pelo CPF.
-Astronauta* getAstroByCPF(string cpf, Registros<Astronauta*> &RegAst){
-	unsigned int qtastro = RegAst.getQuant(); //Variável que recebe a quantidade de astronautas do vetor RegAst (parâmetro).
-
-	//Loop para comparar os cpfs de cada astronauta do vetor para ver qual é igual.
-	for(int i=0;i<qtastro;i++){
-		string t_cpf = RegAst.getE(i)->getCPF();
-		if(cpf == t_cpf){
-			return RegAst.getE(i); //Retorna o astronauta.
-		}
-	}
-
-	return NULL; //Retorna Vazio.
-}
-
-//Função que retorna um astronauta com todos os dados preenchidos.
-Astronauta* addAstro(Registros<Astronauta*> &RegAst){
-	string nome; //Variável para receber o nome do astronauta.
-	string t_cpf; //Variável para receber o CPF do astronauta.
-	int idade; // Variável para receber a idade do astronauta.
-
-	LimparBuffer(); //Limpa o buffer.
-
-	cout << "-----------------------------------" << endl;
-	//Coleta do nome do astronauta.
-	cout << "Qual o nome do astronauta?" << endl;
-	getline(cin, nome);
-	cout << "-----------------------------------" << endl;
-
-	//Coleta do CPF do astronauta.
-	cout << "Qual o CPF de " << nome << "?" << endl;
-	getline(cin, t_cpf);
-	cout << "-----------------------------------" << endl;
-
-	string cpf = confCPF(t_cpf);
-
-	if(getAstroByCPF(cpf, RegAst) != NULL){
-		cout << "Já há um CPF igual ao fornecido. Tente um novo!" << endl;
-		cout << "-----------------------------------" << endl;
-		return NULL;
-	} else{
-		//Coleta da idade do astronauta.
-		cout << "Qual a idade de " << nome << "?" << endl;
-		cin >> idade;
-		cout << "-----------------------------------" << endl;
-		
-		//Ponteiro para criar um astronauta com os valores fornecidos pelo usuário.
-		Astronauta* astro = new Astronauta(idade, cpf, nome);
-		return astro; //Retorna o ponteiro.
-	}
-
-	
-}
 
 //Função que acha um voo pelo código.
 Voo* getVooByCode(int code, Registros<Voo*> &RegVoos){
