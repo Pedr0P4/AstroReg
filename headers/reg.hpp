@@ -16,4 +16,6 @@ class Registros {
 		~Registros();
 };
 
+#include "../source/reg.cpp"
+
 #endif
