@@ -5,59 +5,9 @@
 #include "format.hpp"
 #include "astro.hpp"
 #include "voo.hpp"
+#include "trip.hpp"
 
 using namespace std;
-
-//Classe com as informações de um tripulante
-class Tripulante{
-	private:
-		int codigo; //Código do voo que o tripulante pertence.
-		int idade; //Idade do tripulante.
-		string nome; //Nome do tripulante.
-		string cpf; //CPF do tripulante.
-		bool vivo; //Se o tripulante está vivo ou não.
-
-	public:
-		//Contrutor.
-		Tripulante(int codigo, int idade, string nome, string cpf, bool VoM){
-			this->codigo = codigo; //Código da classe recebe codigo (parâmetro).
-			this->idade = idade; //Idade da classe recebe idade (parâmetro).
-			this->nome = nome; //Nome da classe recebe nome (parâmetro).
-			this->cpf = cpf; //CPF da classe recebe cpf (parâmetro).
-			this->vivo = VoM; //vivo da classe recebe VoM (parâmetro), true para vivo e false para morto.
-		}
-
-		//Função para retornar o código do tripulante.
-		int getTCode(){
-			return this->codigo;
-		}
-
-		//Função para retornar o nome do tripulante.
-		string getTNome(){
-			return this->nome;
-		}
-
-		//Função para retornar a idade do tripulante.
-		int getTIdade(){
-			return this->idade;
-		}
-
-		//Função para retornar o CPF do tripulante.
-		string getTCPF(){
-			return this->cpf;
-		}
-
-		//Função para retornar se o tripulante ta vivo ou não.
-		bool getTVivo(){
-			return this->vivo;
-		}
-
-		//Setter para definir se o tripulante está vivo ou não (True - Vivo / False - Morto).
-		void setVivo(bool ToF){
-			this->vivo = ToF;
-		}
-
-};
 
 class Morto{
 	private:
@@ -84,20 +34,6 @@ class Morto{
 			return this->idade;
 		}
 };
-
-
-//Função que retorna um tripulante com todos os dados preenchidos.
-Tripulante* addTripul(Voo* voo, Astronauta* astronauta){
-	int code_t = voo->getCode(); //Código do voo fornecido pelo usuário.
-	int idade_t = astronauta->getIdade(); //Idade do astronauta fornecido pelo usuário.
-	string nome_t = astronauta->getNome(); //Nome do astronauta fornecido pelo usuário.
-	string cpf_t = astronauta->getCPF(); //CPF do astronauta fornecido pelo usuário.
-	bool vivo_t = astronauta->getVivo(); //Se o astronauta está vivo ou não.
-
-	//Cria um tripulante com as variáveis do início da função.
-	Tripulante* tripul = new Tripulante(code_t, idade_t, nome_t, cpf_t, vivo_t);
-	return tripul; //Retorna esse tripulante.
-}
 
 //Função que retorna um tripulante com todos os dados preenchidos.
 Morto* addMorto(Astronauta* astro){
