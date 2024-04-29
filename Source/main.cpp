@@ -598,19 +598,6 @@ void showMortos(Registros<Morto*> &RegMortos, Registros<Tripulante*> &RegTrip, R
 	}
 }
 
-void delMortos(Voo* voo, Registros<Tripulante*> &RegTrip, Registros<Astronauta*> &RegAstro){
-	unsigned int TQuant = RegTrip.getQuant();
-	int code_voo = voo->getCode();
-
-	for(int i=0;i<TQuant;i++){
-		Tripulante* trip = RegTrip.getE(i);
-		if(trip->getTCode() == code_voo && trip->getTVivo() == false){
-			Astronauta* astro = getAstroByCPF(trip->getTCPF(), RegAstro);
-			delTripul(voo, astro, RegTrip);
-		}
-	}
-}
-
 int main(){
 	//Criação do vetor de ponteiros de Astronautas.
     Registros<Astronauta*> RegistroAstronautas;
@@ -1006,6 +993,7 @@ int main(){
 				if(voo != NULL && voo->getTQuant() > 0 && voo->getLanc() == false && voo->getFin() == false && voo->getExplode() == false){
 					unsigned int TQuant = RegistroTripulantes.getQuant(); //Variável que armazena a quantidade de tripulantes no total.
 					bool check = true;
+					bool check_vivo = true;
 
 					//Loop para verificar cada tripulante.
 					for(int i=0;i<TQuant;i++){
@@ -1018,6 +1006,9 @@ int main(){
 						if(voo->getCode() == TCode && astro->getOcup()){
 							check = false; //check recebe falso.
 							break; //Para o loop.
+						} else if(voo->getCode() == TCode && astro->getVivo() == false){
+							check_vivo = false;
+							break;
 						}
 					}
 
@@ -1058,6 +1049,10 @@ int main(){
 						cout << "Espere o voo finalizar para que o(s) astronauta(s) esteja(m) livre(s)!" << endl;
 						cout << "----------------------------------------------" << endl;
 
+					} else if(check_vivo == false){
+						cout << "----------------------------------------------" << endl;
+						cout << "Não tem como lançar um voo com astronautas mortos nele. Verifique com o comando 7 e apague com o comando 6!" << endl;
+						cout << "----------------------------------------------" << endl;
 					} else{
 						cout << "----------------------------------------------" << endl;
 						voo->setLanc(true); //Chama o setter da classe voo para setar o lançamento como true.
@@ -1197,56 +1192,15 @@ int main(){
 			}
 		} else if(ans == 11){
 			if(RegistroMortos.getQuant() <= 0){
-				cout << "\nNão há mortos." << endl;
+				cout << "\n----------------------------------------------" << endl;	
+				cout << "Não há mortos." << endl;
+				cout << "----------------------------------------------" << endl;
 			} else{
 				showMortos(RegistroMortos, RegistroTripulantes, RegistroVoos);
 			}
 
 			cout << endl;
-		} else if(ans == 12){
-			int code;
-
-			if(RegistroVoos.getQuant() <= 0){
-				cout << "\n----------------------------------------------" << endl;
-				cout << "Não há nenhum voo cadastrado. Cadastre com o comando 3!" << endl;
-				cout << "----------------------------------------------" << endl;
-				cout << endl;
-			} else{
-				cout << "\n----------------------------------------------" << endl;
-				cout << "Qual o código do voo que deseja deletar os mortos?" << endl;
-				cin >> code;
-
-				Voo* voo = getVooByCode(code, RegistroVoos);
-
-				if(voo != NULL && voo->getLanc() == false && voo->getExplode() == false && voo->getFin() == false){
-					cout << "----------------------------------------------" << endl;
-					delMortos(voo, RegistroTripulantes, RegistroAstronautas);
-					cout << "----------------------------------------------" << endl;
-				} else if(voo == NULL){ //Caso não tenha nenhum voo com o código fornecido.
-					//Imprime mensagem de erro.
-					cout << "----------------------------------------------" << endl;
-					cout << "Não há nenhum voo com o código fornecido..." << endl;
-					cout << "----------------------------------------------" << endl;
-				} else if(voo->getExplode()){ //Caso o voo já tenha explodido.
-					//Imprime mensagem de erro.
-					cout << "----------------------------------------------" << endl;
-					cout << "Não tem como deletar mortos de um voo que explodiu." << endl;
-					cout << "----------------------------------------------" << endl;
-				} else if(voo->getFin()){ //Caso o voo já tenha finalizado.
-					//Imprime mensagem de erro.
-					cout << "----------------------------------------------" << endl;
-					cout << "Não tem como deletar mortos de um voo que já foi finalizado." << endl;
-					cout << "----------------------------------------------" << endl;
-				} else if(voo->getLanc()){ //Caso o voo ainda não tenha sido lançado.
-					//Imprime mensagem de erro.
-					cout << "----------------------------------------------" << endl;
-					cout << "Não tem como deletar mortos um voo que foi lançado." << endl;
-					cout << "----------------------------------------------" << endl;
-				}
-
-				cout << endl;
-			}
-		}
+		} 
 	}
 
     return 0;
