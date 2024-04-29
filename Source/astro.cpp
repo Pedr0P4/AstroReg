@@ -6,6 +6,15 @@
 
 using namespace std;
 
+//Construtor.
+Astronauta::Astronauta(int idade, string cpf, string nome){
+	this->idade = idade; //idade da classe recebe idade (parâmetro).
+	this->vivo = true; //vivo recebe true (NÃO é parâmetro).
+	this->cpf = cpf; //cpf da classe recebe cpf (parâmetro).
+	this->nome = nome; //nome da classe recebe nome (parâmetro).
+	this->ocup = false; //ocup da classe recebe false.
+}
+
 //Função que retorna o valor da variável idade da classe.
 int  Astronauta::getIdade(){
 	return this->idade;
