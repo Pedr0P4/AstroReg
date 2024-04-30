@@ -3,20 +3,24 @@
 #include <string>
 using namespace std;
 
+//Construtor.
 Morto::Morto(string nome, string cpf, int idade){
 	this->nome = nome;
 	this->cpf = cpf;
 	this->idade = idade;
 }
 
+//Função que retorna o nome do morto.
 string Morto::getMNome(){
 	return this->nome;
 }
 
+//Função que retorna o cpf do morto.
 string Morto::getMCPF(){
 	return this->cpf;
 }
 
+//Função que retorna a idade do morto.
 int Morto::getMIdade(){
 	return this->idade;
 }
