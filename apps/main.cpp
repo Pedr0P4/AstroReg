@@ -216,7 +216,7 @@ int main(){
 								string cpf_trip = RegistroTripulantes.getE(i)->getTCPF(); //Variável que recebe o cpf do tripulante i.
 								int code_trip = RegistroTripulantes.getE(i)->getTCode(); //Variável que recebe o código do tripulante i.
 								//Se código do tripulante for igual ao código fornecido pelo usuário e o cpf do tripulante for igual ao cpf fornecido pelo usuário.
-								if(code_trip == temp_code && temp_cpf == cpf_trip){
+								if(code_trip == temp_code && confCPF(temp_cpf) == cpf_trip){
 									//Imprime uma mensagem de erro.
 									cout << "O astronauta de CPF " << formatCPF(temp_cpf)
 										 << " já está cadastrado no voo." << endl;
